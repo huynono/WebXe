@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `color` ADD COLUMN `gradient` VARCHAR(191) NULL,
+    ADD COLUMN `hex` VARCHAR(191) NULL;
