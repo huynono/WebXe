@@ -60,7 +60,7 @@ const OrderSuccess = () => {
   const [order, setOrder] = useState<ExtendedOrder | null>(orderData || null);
   const [copied, setCopied] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  
+
   // Review modal states
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewData, setReviewData] = useState<ReviewData>({
@@ -355,7 +355,7 @@ const OrderSuccess = () => {
                 <Shield className="w-4 h-4 text-green-600" />
                 <span className="text-sm font-medium text-slate-700">Bảo hành chính hãng</span>
               </div>
-              
+
               <button
                 onClick={refreshOrderStatus}
                 disabled={isRefreshing}
@@ -376,11 +376,11 @@ const OrderSuccess = () => {
             <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-8 shadow-2xl">
               <CheckCircle2 className="w-12 h-12 text-white" />
             </div>
-            
+
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               {order.paymentStatus === "paid" ? "🎉 Đặt hàng thành công!" : "✨ Đơn hàng đã được tạo!"}
             </h2>
-            
+
             <p className="text-xl text-emerald-50 mb-8 max-w-2xl mx-auto leading-relaxed">
               {order.paymentStatus === "paid"
                 ? "Cảm ơn bạn đã tin tưởng và mua sắm tại cửa hàng. Đơn hàng sẽ được xử lý và giao đến bạn sớm nhất."
@@ -476,21 +476,19 @@ const OrderSuccess = () => {
                       <div key={step.status} className="relative flex items-center group">
                         {/* Enhanced Timeline line */}
                         {index < statusSteps.length - 1 && (
-                          <div className={`absolute left-8 top-16 w-1 h-12 rounded-full transition-all duration-500 ${
-                            step.completed 
-                              ? 'bg-gradient-to-b from-emerald-400 to-emerald-500' 
+                          <div className={`absolute left-8 top-16 w-1 h-12 rounded-full transition-all duration-500 ${step.completed
+                              ? 'bg-gradient-to-b from-emerald-400 to-emerald-500'
                               : 'bg-slate-200'
-                          }`} />
+                            }`} />
                         )}
 
                         {/* Enhanced Step icon */}
-                        <div className={`relative z-10 flex items-center justify-center w-16 h-16 rounded-2xl border-4 transition-all duration-300 ${
-                          step.completed
+                        <div className={`relative z-10 flex items-center justify-center w-16 h-16 rounded-2xl border-4 transition-all duration-300 ${step.completed
                             ? 'bg-gradient-to-br from-emerald-400 to-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-200'
                             : step.current
                               ? 'bg-gradient-to-br from-blue-400 to-indigo-500 border-blue-400 text-white animate-pulse shadow-lg shadow-blue-200'
                               : 'bg-white border-slate-300 text-slate-400 group-hover:border-slate-400'
-                        }`}>
+                          }`}>
                           {/* <StepIcon className="w-7 h-7" /> */}
                         </div>
 
@@ -498,14 +496,12 @@ const OrderSuccess = () => {
                         <div className="ml-6 flex-1">
                           <div className="flex items-center justify-between">
                             <div>
-                              <h4 className={`text-xl font-bold transition-colors ${
-                                step.completed || step.current ? 'text-slate-900' : 'text-slate-500'
-                              }`}>
+                              <h4 className={`text-xl font-bold transition-colors ${step.completed || step.current ? 'text-slate-900' : 'text-slate-500'
+                                }`}>
                                 {step.title}
                               </h4>
-                              <p className={`text-sm mt-1 ${
-                                step.completed || step.current ? 'text-slate-600' : 'text-slate-400'
-                              }`}>
+                              <p className={`text-sm mt-1 ${step.completed || step.current ? 'text-slate-600' : 'text-slate-400'
+                                }`}>
                                 {step.description}
                               </p>
                               {step.current && (
@@ -806,7 +802,7 @@ const OrderSuccess = () => {
                   </div>
                   <h4 className="font-bold text-blue-900 text-lg">Cần hỗ trợ?</h4>
                 </div>
-                
+
                 <div className="space-y-3 text-blue-800">
                   <div className="flex items-center space-x-3 p-3 bg-white/50 rounded-xl">
                     <Phone className="w-4 h-4 text-blue-600" />
@@ -897,11 +893,10 @@ const OrderSuccess = () => {
                         <button
                           key={star}
                           onClick={() => handleStarClick(star)}
-                          className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 transform ${
-                            star <= reviewData.rating
+                          className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 transform ${star <= reviewData.rating
                               ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white scale-110 shadow-lg'
                               : 'bg-slate-100 text-slate-400 hover:bg-yellow-50 hover:text-yellow-400 hover:scale-105'
-                          }`}
+                            }`}
                         >
                           <Star className={`w-10 h-10 ${star <= reviewData.rating ? 'fill-current' : ''}`} />
                         </button>
@@ -948,7 +943,7 @@ const OrderSuccess = () => {
                     Hình ảnh thực tế
                     <span className="text-base font-normal text-slate-500 ml-3">Tối đa 5 ảnh (5MB/ảnh)</span>
                   </h4>
-                  
+
                   {/* Premium Upload Area */}
                   <div className="mb-6">
                     <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-300 rounded-2xl cursor-pointer hover:border-yellow-500 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 transition-all duration-300 group">

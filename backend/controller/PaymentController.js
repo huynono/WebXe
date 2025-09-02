@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import jwt from 'jsonwebtoken';
+import { PrismaClient } from "@prisma/client";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
@@ -10,8 +10,8 @@ export const initSocket = (ioInstance) => {
 };
 
 // ================== CONFIG BANK ==================
-const BANK_ACCOUNT_NO = "0365515124"; 
-const BANK_BIN = "970417";           
+const BANK_ACCOUNT_NO = "0365515124";
+const BANK_BIN = "970417";
 const BANK_NAME = "MB Bank";
 const ACCOUNT_NAME = "NGUYEN DINH HOANG HUY";
 
@@ -25,13 +25,11 @@ async function decrementVoucher(voucherId) {
 
     if (newUsage === 0) {
       await prisma.voucher.delete({ where: { id: voucherId } });
-      console.log(`Voucher ${voucher.code} đã hết lượt và bị xóa`);
     } else {
       await prisma.voucher.update({
         where: { id: voucherId },
         data: { usageLimit: newUsage },
       });
-      console.log(`Voucher ${voucher.code} còn ${newUsage} lượt`);
     }
   }
 }
@@ -47,13 +45,19 @@ export const createOrder = async (req, res) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       userId = decoded.userId || decoded.id;
     } catch (err) {
-      console.error("Lỗi decode JWT:", err);
       return res.status(401).json({ message: "Token không hợp lệ" });
     }
 
-    if (!userId) return res.status(401).json({ message: "Token không có userId" });
+    if (!userId)
+      return res.status(401).json({ message: "Token không có userId" });
 
-    const { paymentMethod, voucherId, totalAmount, items = [], address } = req.body;
+    const {
+      paymentMethod,
+      voucherId,
+      totalAmount,
+      items = [],
+      address,
+    } = req.body;
 
     let cartItems = items;
     let cart = null;
@@ -61,29 +65,36 @@ export const createOrder = async (req, res) => {
     if (!cartItems || cartItems.length === 0) {
       cart = await prisma.cart.findUnique({
         where: { userId },
-        include: { items: { include: { product: true } } }
+        include: { items: { include: { product: true } } },
       });
 
       if (!cart || cart.items.length === 0) {
         return res.status(400).json({ message: "Giỏ hàng trống" });
       }
 
-      cartItems = cart.items.map(item => ({
+      cartItems = cart.items.map((item) => ({
         productId: item.productId,
         quantity: item.quantity,
         price: item.product.price,
-        colorId: item.colorId !== undefined && item.colorId !== null ? Number(item.colorId) : null
+        colorId:
+          item.colorId !== undefined && item.colorId !== null
+            ? Number(item.colorId)
+            : null,
       }));
     }
 
-    const orderItemsData = cartItems.map(item => {
+    const orderItemsData = cartItems.map((item) => {
       const orderItem = {
         product: { connect: { id: item.productId } },
         quantity: item.quantity,
-        price: item.price
+        price: item.price,
       };
 
-      if (item.colorId !== null && item.colorId !== undefined && !isNaN(item.colorId)) {
+      if (
+        item.colorId !== null &&
+        item.colorId !== undefined &&
+        !isNaN(item.colorId)
+      ) {
         orderItem.color = { connect: { id: Number(item.colorId) } };
       }
 
@@ -97,7 +108,7 @@ export const createOrder = async (req, res) => {
       status: "pending",
       paymentStatus: "unpaid",
       address,
-      items: { create: orderItemsData }
+      items: { create: orderItemsData },
     };
 
     if (voucherId) orderData.voucher = { connect: { id: voucherId } };
@@ -108,25 +119,25 @@ export const createOrder = async (req, res) => {
         items: {
           include: {
             product: { select: { id: true, name: true, image: true } },
-            color: { select: { id: true, name: true } }
-          }
-        }
-      }
+            color: { select: { id: true, name: true } },
+          },
+        },
+      },
     });
 
     // Trừ số lượng sản phẩm
     for (const item of order.items) {
       await prisma.product.update({
         where: { id: item.product.id },
-        data: { quantity: { decrement: item.quantity } }
+        data: { quantity: { decrement: item.quantity } },
       });
     }
 
     // Xóa cart items
     if (cart && cartItems.length > 0) {
-      const productIdsToDelete = cartItems.map(item => item.productId);
+      const productIdsToDelete = cartItems.map((item) => item.productId);
       await prisma.cartItem.deleteMany({
-        where: { cartId: cart.id, productId: { in: productIdsToDelete } }
+        where: { cartId: cart.id, productId: { in: productIdsToDelete } },
       });
     }
 
@@ -135,7 +146,10 @@ export const createOrder = async (req, res) => {
     if (io) io.emit("orderCreated", order);
 
     if (paymentMethod === "COD") {
-      return res.json({ order, message: "Đơn hàng COD đã được tạo thành công" });
+      return res.json({
+        order,
+        message: "Đơn hàng COD đã được tạo thành công",
+      });
     }
 
     if (paymentMethod === "BANK") {
@@ -147,14 +161,18 @@ export const createOrder = async (req, res) => {
 
       return res.json({
         order,
-        bankInfo: { bankName: BANK_NAME, accountNo: BANK_ACCOUNT_NO, accountName: ACCOUNT_NAME },
-        qrCodeUrl: qrUrl
+        bankInfo: {
+          bankName: BANK_NAME,
+          accountNo: BANK_ACCOUNT_NO,
+          accountName: ACCOUNT_NAME,
+        },
+        qrCodeUrl: qrUrl,
       });
     }
-
   } catch (error) {
-    console.error("❌ Lỗi khi tạo đơn hàng:", error);
-    res.status(500).json({ message: "Lỗi khi tạo đơn hàng", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Lỗi khi tạo đơn hàng", error: error.message });
   }
 };
 
@@ -167,7 +185,7 @@ export const getAllOrders = async (req, res) => {
       where: {
         status: status || undefined,
         paymentStatus: paymentStatus || undefined,
-        userId: userId ? Number(userId) : undefined
+        userId: userId ? Number(userId) : undefined,
       },
       orderBy: { createdAt: "desc" },
       include: {
@@ -175,23 +193,33 @@ export const getAllOrders = async (req, res) => {
         items: {
           include: {
             product: { select: { id: true, name: true, image: true } },
-            color: { select: { id: true, name: true } }
-          }
+            color: { select: { id: true, name: true } },
+          },
         },
         voucher: {
           select: {
-            id: true, code: true, description: true,
-            discountType: true, discountValue: true, maxDiscount: true,
-            minOrderValue: true, startDate: true, endDate: true
-          }
-        }
-      }
+            id: true,
+            code: true,
+            description: true,
+            discountType: true,
+            discountValue: true,
+            maxDiscount: true,
+            minOrderValue: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
+      },
     });
 
     res.json({ orders });
   } catch (error) {
-    console.error("❌ Lỗi khi lấy danh sách orders:", error);
-    res.status(500).json({ message: "Lỗi khi lấy danh sách đơn hàng", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Lỗi khi lấy danh sách đơn hàng",
+        error: error.message,
+      });
   }
 };
 
@@ -204,15 +232,24 @@ export const updateOrderStatus = async (req, res) => {
     const updatedOrder = await prisma.order.update({
       where: { id: Number(id) },
       data: { status, paymentStatus },
-      include: { items: { include: { product: true } } }
+      include: { items: { include: { product: true } } },
     });
 
     if (io) io.emit("updateOrder", updatedOrder);
 
-    res.status(200).json({ message: "✅ Cập nhật trạng thái thành công", order: updatedOrder });
+    res
+      .status(200)
+      .json({
+        message: "✅ Cập nhật trạng thái thành công",
+        order: updatedOrder,
+      });
   } catch (error) {
-    console.error("🔥 Lỗi updateOrderStatus:", error);
-    res.status(500).json({ message: "❌ Lỗi server khi cập nhật đơn hàng", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "❌ Lỗi server khi cập nhật đơn hàng",
+        error: error.message,
+      });
   }
 };
 
@@ -224,7 +261,7 @@ export const deleteOrder = async (req, res) => {
     // Tìm đơn hàng và items liên quan
     const existingOrder = await prisma.order.findUnique({
       where: { id: Number(id) },
-      include: { items: true }
+      include: { items: true },
     });
 
     if (!existingOrder) {
@@ -235,7 +272,7 @@ export const deleteOrder = async (req, res) => {
     for (const item of existingOrder.items) {
       await prisma.product.update({
         where: { id: item.productId },
-        data: { quantity: { increment: item.quantity } }
+        data: { quantity: { increment: item.quantity } },
       });
     }
 
@@ -243,22 +280,25 @@ export const deleteOrder = async (req, res) => {
     await prisma.orderItem.deleteMany({ where: { orderId: Number(id) } });
 
     // Xóa đơn chính
-    const deletedOrder = await prisma.order.delete({ where: { id: Number(id) } });
+    const deletedOrder = await prisma.order.delete({
+      where: { id: Number(id) },
+    });
 
     if (io) io.emit("deleteOrder", { orderId: Number(id) });
 
     return res.status(200).json({
       message: "✅ Xóa đơn hàng thành công và đã hoàn lại số lượng sản phẩm",
-      deletedOrder
+      deletedOrder,
     });
-
   } catch (error) {
-    console.error("🔥 Lỗi deleteOrder:", error);
-    res.status(500).json({ message: "❌ Lỗi server khi xóa đơn hàng", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "❌ Lỗi server khi xóa đơn hàng",
+        error: error.message,
+      });
   }
 };
-
-
 
 // ================== GET USER ORDERS ==================
 export const getUserOrders = async (req, res) => {
@@ -271,11 +311,11 @@ export const getUserOrders = async (req, res) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       userId = decoded.userId || decoded.id;
     } catch (err) {
-      console.error("❌ Lỗi decode JWT:", err);
       return res.status(401).json({ message: "Token không hợp lệ" });
     }
 
-    if (!userId) return res.status(401).json({ message: "Token không có userId" });
+    if (!userId)
+      return res.status(401).json({ message: "Token không có userId" });
 
     const orders = await prisma.order.findMany({
       where: { userId: Number(userId) },
@@ -288,46 +328,50 @@ export const getUserOrders = async (req, res) => {
           },
         },
         voucher: {
-          select: { id: true, code: true, discountType: true, discountValue: true, maxDiscount: true },
+          select: {
+            id: true,
+            code: true,
+            discountType: true,
+            discountValue: true,
+            maxDiscount: true,
+          },
         },
         user: { select: { id: true, name: true, email: true } },
       },
     });
 
-   const formattedOrders = orders.map(order => {
-  const itemCount = order.items.reduce(
-    (sum, item) => sum + (item.quantity ?? 0), 
-    0
-  );
+    const formattedOrders = orders.map((order) => {
+      const itemCount = order.items.reduce(
+        (sum, item) => sum + (item.quantity ?? 0),
+        0
+      );
 
-  const formatted = {
-    ...order,
-    itemCount,
-    firstItemName: order.items[0]?.product?.name || "",
-    firstItemImage: order.items[0]?.product?.image || ""
-  };
+      const formatted = {
+        ...order,
+        itemCount,
+        firstItemName: order.items[0]?.product?.name || "",
+        firstItemImage: order.items[0]?.product?.image || "",
+      };
 
-  console.log("🛒 Order formatted:", {
-    id: order.id,
-    itemCount,
-    items: order.items.map(i => ({
-      product: i.product?.name,
-      quantity: i.quantity
-    }))
-  });
+      console.log("🛒 Order formatted:", {
+        id: order.id,
+        itemCount,
+        items: order.items.map((i) => ({
+          product: i.product?.name,
+          quantity: i.quantity,
+        })),
+      });
 
-  return formatted;
-});
+      return formatted;
+    });
 
-res.json({ orders: formattedOrders });
-
+    res.json({ orders: formattedOrders });
   } catch (error) {
-    console.error("🔥 Lỗi getUserOrders:", error);
-    res.status(500).json({ message: "Lỗi server khi lấy đơn hàng", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Lỗi server khi lấy đơn hàng", error: error.message });
   }
 };
-
-
 
 export const getOrderById = async (req, res) => {
   try {
@@ -352,12 +396,12 @@ export const getOrderById = async (req, res) => {
         items: {
           include: {
             product: {
-              select: { id: true, name: true, image: true }
+              select: { id: true, name: true, image: true },
             },
             color: {
-              select: { id: true, name: true }
-            }
-          }
+              select: { id: true, name: true },
+            },
+          },
         },
         voucher: {
           select: {
@@ -365,11 +409,11 @@ export const getOrderById = async (req, res) => {
             code: true,
             discountType: true,
             discountValue: true,
-            maxDiscount: true
-          }
+            maxDiscount: true,
+          },
         },
-        user: true
-      }
+        user: true,
+      },
     });
 
     if (!order) {
@@ -379,7 +423,6 @@ export const getOrderById = async (req, res) => {
     // Trả về kết quả
     res.json({ order });
   } catch (error) {
-    console.error("🔥 Lỗi getOrderById:", error);
     res.status(500).json({ message: "Lỗi server", error: error.message });
   }
 };

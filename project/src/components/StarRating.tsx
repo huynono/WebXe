@@ -8,9 +8,9 @@ interface StarRatingProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ 
-  rating, 
-  totalReviews, 
+const StarRating: React.FC<StarRatingProps> = ({
+  rating,
+  totalReviews,
   showReviews = true,
   size = 'md'
 }) => {
@@ -36,13 +36,12 @@ const StarRating: React.FC<StarRatingProps> = ({
           return (
             <Star
               key={star}
-              className={`${sizeClasses[size]} ${
-                full
+              className={`${sizeClasses[size]} ${full
                   ? 'text-yellow-400 fill-yellow-400'
                   : half
-                  ? 'text-yellow-400 fill-yellow-200'
-                  : 'text-gray-300'
-              }`}
+                    ? 'text-yellow-400 fill-yellow-200'
+                    : 'text-gray-300'
+                }`}
             />
           );
         })}

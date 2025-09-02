@@ -76,7 +76,7 @@ const Hero = () => {
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-2xl">
-                Khám phá bộ sưu tập xe hơi cao cấp với công nghệ tiên tiến và thiết kế đột phá. 
+                Khám phá bộ sưu tập xe hơi cao cấp với công nghệ tiên tiến và thiết kế đột phá.
                 <span className="text-cyan-400 font-semibold"> Trải nghiệm lái xe trong mơ</span> đang chờ đón bạn.
               </p>
             </div>
@@ -168,7 +168,7 @@ const Hero = () => {
                     alt={featuredCars[currentImageIndex].name}
                     className="w-full h-80 lg:h-96 object-cover rounded-2xl transition-all duration-700 transform group-hover:scale-105"
                   />
-                  
+
                   {/* Car Info Overlay */}
                   <div className="absolute bottom-8 left-8 right-8 bg-gradient-to-r from-black/80 via-black/60 to-transparent backdrop-blur-md rounded-2xl p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     <h3 className="text-2xl font-bold text-white mb-2">{featuredCars[currentImageIndex].name}</h3>
@@ -192,11 +192,10 @@ const Hero = () => {
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      index === currentImageIndex 
-                        ? 'bg-gradient-to-r from-blue-400 to-cyan-400 w-8' 
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentImageIndex
+                        ? 'bg-gradient-to-r from-blue-400 to-cyan-400 w-8'
                         : 'bg-white/30 hover:bg-white/50'
-                    }`}
+                      }`}
                   />
                 ))}
               </div>

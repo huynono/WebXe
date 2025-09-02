@@ -30,71 +30,71 @@ const ChatAI: React.FC = () => {
   }, [messages]);
 
   // Gửi tin nhắn tới backend
- const handleSendMessage = async () => {
-  if (!inputText.trim()) return;
+  const handleSendMessage = async () => {
+    if (!inputText.trim()) return;
 
-  const newUserMessage: Message = {
-    id: Date.now().toString(),
-    text: inputText,
-    isUser: true,
-    timestamp: new Date(),
+    const newUserMessage: Message = {
+      id: Date.now().toString(),
+      text: inputText,
+      isUser: true,
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, newUserMessage]);
+    setInputText("");
+    setIsTyping(true);
+
+    try {
+      const token = localStorage.getItem("token"); // lấy JWT đã lưu
+      if (!token) throw new Error("Bạn cần đăng nhập để chat");
+
+      const response = await fetch("http://localhost:3000/api/chatai/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // gửi token
+        },
+        body: JSON.stringify({
+          message: inputText,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API trả về lỗi ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      const aiResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: data.reply || "Xin lỗi, tôi không có phản hồi.",
+        isUser: false,
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, aiResponse]);
+    } catch (error) {
+      console.error("Lỗi gọi API:", error);
+
+      const errorMsg: Message = {
+        id: (Date.now() + 2).toString(),
+        text: "⚠️ Xin lỗi, hiện tại không kết nối được với máy chủ.",
+        isUser: false,
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
-  setMessages((prev) => [...prev, newUserMessage]);
-  setInputText("");
-  setIsTyping(true);
-
-  try {
-    const token = localStorage.getItem("token"); // lấy JWT đã lưu
-    if (!token) throw new Error("Bạn cần đăng nhập để chat");
-
-    const response = await fetch("http://localhost:3000/api/chatai/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // gửi token
-      },
-      body: JSON.stringify({
-        message: inputText,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`API trả về lỗi ${response.status}`);
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
-
-    const data = await response.json();
-
-    const aiResponse: Message = {
-      id: (Date.now() + 1).toString(),
-      text: data.reply || "Xin lỗi, tôi không có phản hồi.",
-      isUser: false,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, aiResponse]);
-  } catch (error) {
-    console.error("Lỗi gọi API:", error);
-
-    const errorMsg: Message = {
-      id: (Date.now() + 2).toString(),
-      text: "⚠️ Xin lỗi, hiện tại không kết nối được với máy chủ.",
-      isUser: false,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, errorMsg]);
-  } finally {
-    setIsTyping(false);
-  }
-};
-
-const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    handleSendMessage();
-  }
-};
+  };
 
 
   return (
@@ -130,16 +130,14 @@ const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex items-start gap-3 animate-fade-in ${
-                  message.isUser ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-start gap-3 animate-fade-in ${message.isUser ? "flex-row-reverse" : ""
+                  }`}
               >
                 <div
-                  className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${
-                    message.isUser
+                  className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${message.isUser
                       ? "bg-gradient-to-r from-orange-500 to-red-500"
                       : "bg-gradient-to-r from-blue-600 to-indigo-600"
-                  }`}
+                    }`}
                 >
                   {message.isUser ? (
                     <User className="w-5 h-5 text-white" />
@@ -148,17 +146,15 @@ const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
                   )}
                 </div>
                 <div
-                  className={`max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl rounded-2xl px-4 py-3 shadow-md transition-all duration-200 hover:shadow-lg ${
-                    message.isUser
+                  className={`max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl rounded-2xl px-4 py-3 shadow-md transition-all duration-200 hover:shadow-lg ${message.isUser
                       ? "bg-gradient-to-r from-orange-500 to-red-500 text-white"
                       : "bg-gray-100 text-gray-800 border border-gray-200"
-                  }`}
+                    }`}
                 >
                   <p className="text-sm leading-relaxed">{message.text}</p>
                   <p
-                    className={`text-xs mt-2 ${
-                      message.isUser ? "text-orange-100" : "text-gray-500"
-                    }`}
+                    className={`text-xs mt-2 ${message.isUser ? "text-orange-100" : "text-gray-500"
+                      }`}
                   >
                     {message.timestamp.toLocaleTimeString("vi-VN", {
                       hour: "2-digit",

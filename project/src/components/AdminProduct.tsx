@@ -18,8 +18,8 @@ interface Safety {
 
 interface ColorItem {
   name: string;
-  hex : string;
-  gradient : string;
+  hex: string;
+  gradient: string;
 }
 
 interface Category {
@@ -102,7 +102,7 @@ export default function AdminProduct() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  
+
 
   // Auto-generate slug from name
   useEffect(() => {
@@ -134,14 +134,14 @@ export default function AdminProduct() {
         alert('❌ File ảnh quá lớn! Vui lòng chọn file nhỏ hơn 10MB.');
         return;
       }
-      
+
       // Kiểm tra định dạng file
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
       if (!allowedTypes.includes(file.type)) {
         alert('❌ Định dạng file không được hỗ trợ! Vui lòng chọn file JPG, PNG, GIF hoặc WebP.');
         return;
       }
-      
+
       setFormData(prev => ({ ...prev, image: file }));
       const reader = new FileReader();
       reader.onload = (ev) => {
@@ -153,7 +153,7 @@ export default function AdminProduct() {
 
   const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
-    
+
     // Kiểm tra từng file
     const validFiles = files.filter(file => {
       // Kiểm tra kích thước file (max 10MB)
@@ -161,19 +161,19 @@ export default function AdminProduct() {
         alert(`❌ File "${file.name}" quá lớn! Vui lòng chọn file nhỏ hơn 10MB.`);
         return false;
       }
-      
+
       // Kiểm tra định dạng file
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
       if (!allowedTypes.includes(file.type)) {
         alert(`❌ File "${file.name}" có định dạng không được hỗ trợ! Vui lòng chọn file JPG, PNG, GIF hoặc WebP.`);
         return false;
       }
-      
+
       return true;
     });
-    
+
     if (validFiles.length === 0) return;
-    
+
     setFormData(prev => ({ ...prev, images: [...prev.images, ...validFiles] }));
 
     validFiles.forEach(file => {
@@ -265,36 +265,36 @@ export default function AdminProduct() {
     }));
   };
 
- const addColor = () => {
-  setFormData(prev => ({
-    ...prev,
-    colors: [
-      ...prev.colors,
-      { name: '', hex: '', gradient: '' } // ✅ thêm đủ field rỗng
-    ]
-  }));
-};
+  const addColor = () => {
+    setFormData(prev => ({
+      ...prev,
+      colors: [
+        ...prev.colors,
+        { name: '', hex: '', gradient: '' } // ✅ thêm đủ field rỗng
+      ]
+    }));
+  };
 
-const updateColor = (index: number, field: keyof ColorItem, value: string) => {
-  setFormData((prev) => {
-    const newColors = prev.colors.map((c, i) => {
-      if (i === index) {
-        const updated: ColorItem = { ...c, [field]: value };
+  const updateColor = (index: number, field: keyof ColorItem, value: string) => {
+    setFormData((prev) => {
+      const newColors = prev.colors.map((c, i) => {
+        if (i === index) {
+          const updated: ColorItem = { ...c, [field]: value };
 
-        // Nếu thay đổi hex thì cập nhật luôn gradient
-        
-              if (field === "hex") {
-          updated.gradient = `linear-gradient(to right, ${value}, ${value})`;
-            }
+          // Nếu thay đổi hex thì cập nhật luôn gradient
 
-        return updated;
-      }
-      return c;
+          if (field === "hex") {
+            updated.gradient = `linear-gradient(to right, ${value}, ${value})`;
+          }
+
+          return updated;
+        }
+        return c;
+      });
+
+      return { ...prev, colors: newColors };
     });
-
-    return { ...prev, colors: newColors };
-  });
-};
+  };
 
 
   const removeColor = (index: number) => {
@@ -442,7 +442,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
               </div>
             </div>
           )}
-          
+
           {error && (
             <div className="bg-gradient-to-r from-red-500 to-pink-600 border-0 text-white px-6 py-4 rounded-2xl relative shadow-lg animate-bounce" role="alert">
               <div className="flex items-center gap-3">
@@ -453,7 +453,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
               </div>
             </div>
           )}
-          
+
           {success && (
             <div className="bg-gradient-to-r from-green-500 to-emerald-600 border-0 text-white px-6 py-4 rounded-2xl relative shadow-lg animate-bounce" role="alert">
               <div className="flex items-center gap-3">
@@ -473,7 +473,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
               </div>
               <h2 className="text-3xl font-bold text-gray-800">Thông tin cơ bản</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -601,27 +601,27 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
 
 
 
-      <div className="mt-8">
-  <label className="block text-sm font-semibold text-gray-700 mb-3">
-    Mô tả chi tiết
-  </label>
+            <div className="mt-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                Mô tả chi tiết
+              </label>
 
-  <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200 overflow-auto resize-y min-h-[150px] max-h-[500px]">
-    <ReactQuill
-      theme="snow"
-      value={formData.description}
-      onChange={(value) => handleInputChange('description', value)}
-      className="rounded-2xl"
-      style={{
-        minHeight: '150px',
-        maxHeight: '500px',
-        height: '100%',
-        overflow: 'auto'
-      }}
-      placeholder="Mô tả chi tiết về sản phẩm, tính năng nổi bật, và thông tin quan trọng..."
-    />
-  </div>
-</div>
+              <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200 overflow-auto resize-y min-h-[150px] max-h-[500px]">
+                <ReactQuill
+                  theme="snow"
+                  value={formData.description}
+                  onChange={(value) => handleInputChange('description', value)}
+                  className="rounded-2xl"
+                  style={{
+                    minHeight: '150px',
+                    maxHeight: '500px',
+                    height: '100%',
+                    overflow: 'auto'
+                  }}
+                  placeholder="Mô tả chi tiết về sản phẩm, tính năng nổi bật, và thông tin quan trọng..."
+                />
+              </div>
+            </div>
 
 
 
@@ -640,7 +640,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
               </div>
               <h2 className="text-3xl font-bold text-gray-800">Thông tin kỹ thuật</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -722,7 +722,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
               </div>
               <h2 className="text-3xl font-bold text-gray-800">Hình ảnh sản phẩm</h2>
             </div>
-            
+
             {/* Ảnh chính */}
             <div className="mb-10">
               <label className="block text-sm font-semibold text-gray-700 mb-4">
@@ -786,7 +786,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
                   />
                 </label>
               </div>
-              
+
               {imagePreviews.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                   {imagePreviews.map((preview, index) => (
@@ -828,7 +828,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
                 Thêm thông số
               </button>
             </div>
-            
+
             <div className="space-y-4">
               {formData.specifications.map((spec, index) => (
                 <div key={index} className="flex items-center gap-4 p-6 bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl border border-orange-100">
@@ -857,7 +857,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
                   </button>
                 </div>
               ))}
-              
+
               {formData.specifications.length === 0 && (
                 <div className="text-center py-12">
                   <div className="w-20 h-20 bg-gradient-to-r from-orange-100 to-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -889,7 +889,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
                 Thêm tính năng
               </button>
             </div>
-            
+
             <div className="space-y-4">
               {formData.features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-4 p-6 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl border border-yellow-100">
@@ -911,7 +911,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
                   </button>
                 </div>
               ))}
-              
+
               {formData.features.length === 0 && (
                 <div className="text-center py-12">
                   <div className="w-20 h-20 bg-gradient-to-r from-yellow-100 to-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -943,7 +943,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
                 Thêm tính năng an toàn
               </button>
             </div>
-            
+
             <div className="space-y-4">
               {formData.safeties.map((safety, index) => (
                 <div key={index} className="flex items-center gap-4 p-6 bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl border border-red-100">
@@ -965,7 +965,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
                   </button>
                 </div>
               ))}
-              
+
               {formData.safeties.length === 0 && (
                 <div className="text-center py-12">
                   <div className="w-20 h-20 bg-gradient-to-r from-red-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -989,79 +989,79 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
 
 
           {/* Màu sắc */}
-<div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
-  <div className="flex items-center justify-between mb-8">
-    <div className="flex items-center gap-4">
-      <div className="p-3 bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl">
-        <Shield className="h-8 w-8 text-white" />
-      </div>
-      <h2 className="text-3xl font-bold text-gray-800">Màu sắc</h2>
-    </div>
-    <button
-      type="button"
-      onClick={addColor}
-      className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-2xl hover:from-red-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-    >
-      <Plus className="h-5 w-5" />
-      Thêm màu sắc
-    </button>
-  </div>
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl">
+                  <Shield className="h-8 w-8 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-800">Màu sắc</h2>
+              </div>
+              <button
+                type="button"
+                onClick={addColor}
+                className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-2xl hover:from-red-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              >
+                <Plus className="h-5 w-5" />
+                Thêm màu sắc
+              </button>
+            </div>
 
-  <div className="space-y-4">
-    {formData.colors.map((color, index) => (
-      <div
-        key={index}
-        className="flex items-center gap-4 p-6 bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl border border-red-100"
-      >
-        {/* Tên màu */}
-        <input
-          type="text"
-          value={color.name}
-          onChange={(e) => updateColor(index, "name", e.target.value)}
-          className="flex-1 px-4 py-3 border-2 border-red-200 rounded-xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 bg-white/70"
-          placeholder="VD: Đỏ Ruby"
-        />
+            <div className="space-y-4">
+              {formData.colors.map((color, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-6 bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl border border-red-100"
+                >
+                  {/* Tên màu */}
+                  <input
+                    type="text"
+                    value={color.name}
+                    onChange={(e) => updateColor(index, "name", e.target.value)}
+                    className="flex-1 px-4 py-3 border-2 border-red-200 rounded-xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 bg-white/70"
+                    placeholder="VD: Đỏ Ruby"
+                  />
 
-        {/* Mã hex */}
-        <input
-          type="color"
-          value={color.hex}
-          onChange={(e) => updateColor(index, "hex", e.target.value)}
-          className="w-16 h-12 border-2 border-red-200 rounded-xl cursor-pointer"
-        />
+                  {/* Mã hex */}
+                  <input
+                    type="color"
+                    value={color.hex}
+                    onChange={(e) => updateColor(index, "hex", e.target.value)}
+                    className="w-16 h-12 border-2 border-red-200 rounded-xl cursor-pointer"
+                  />
 
-        {/* Gradient */}
-        <input
-          type="text"
-          value={color.gradient}
-          onChange={(e) => updateColor(index, "gradient", e.target.value)}
-          className="flex-1 px-4 py-3 border-2 border-red-200 rounded-xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 bg-white/70"
-          placeholder="VD: linear-gradient(to right, #ff0000, #0000ff)"
-        />
+                  {/* Gradient */}
+                  <input
+                    type="text"
+                    value={color.gradient}
+                    onChange={(e) => updateColor(index, "gradient", e.target.value)}
+                    className="flex-1 px-4 py-3 border-2 border-red-200 rounded-xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 bg-white/70"
+                    placeholder="VD: linear-gradient(to right, #ff0000, #0000ff)"
+                  />
 
-        {/* Xoá */}
-        <button
-          type="button"
-          onClick={() => removeColor(index)}
-          className="p-3 text-red-600 hover:bg-red-100 rounded-full transition-all duration-300 hover:shadow-lg"
-        >
-          <Trash2 className="h-5 w-5" />
-        </button>
-      </div>
-    ))}
+                  {/* Xoá */}
+                  <button
+                    type="button"
+                    onClick={() => removeColor(index)}
+                    className="p-3 text-red-600 hover:bg-red-100 rounded-full transition-all duration-300 hover:shadow-lg"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                </div>
+              ))}
 
-    {formData.colors.length === 0 && (
-      <div className="text-center py-12">
-        <div className="w-20 h-20 bg-gradient-to-r from-red-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Shield className="h-10 w-10 text-red-500" />
-        </div>
-        <p className="text-gray-500 text-lg italic">
-          Chưa có màu sắc nào. Nhấn "Thêm màu sắc" để bắt đầu.
-        </p>
-      </div>
-    )}
-  </div>
-</div>
+              {formData.colors.length === 0 && (
+                <div className="text-center py-12">
+                  <div className="w-20 h-20 bg-gradient-to-r from-red-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Shield className="h-10 w-10 text-red-500" />
+                  </div>
+                  <p className="text-gray-500 text-lg italic">
+                    Chưa có màu sắc nào. Nhấn "Thêm màu sắc" để bắt đầu.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
 
 
 
@@ -1101,7 +1101,7 @@ const updateColor = (index: number, field: keyof ColorItem, value: string) => {
                     images: [],
                     specifications: [],
                     features: [],
-                    safeties: [], 
+                    safeties: [],
                     colors: [],
                   });
                   setImagePreview(null);

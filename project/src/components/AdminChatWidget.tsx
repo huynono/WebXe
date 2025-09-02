@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { X, Send, Users } from "lucide-react";
-import { sendMessage, onNewMessage, offNewMessage, Message  } from "./types/socketclient";
+import { sendMessage, onNewMessage, offNewMessage, Message } from "./types/socketclient";
 
 // Kiểu dữ liệu room từ server
 type ChatRoomFromServer = {
@@ -69,7 +69,7 @@ const AdminChatWidget: React.FC = () => {
   // === Chọn room và fetch messages ===
   const selectRoom = async (room: ChatRoom) => {
     setSelectedRoom(room);
-     // FE emit join room trước khi fetch messages
+    // FE emit join room trước khi fetch messages
     try {
       const res = await fetch(`http://localhost:3000/api/chatadmin/messages/${room.roomId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token") ?? ""}` },
@@ -90,42 +90,42 @@ const AdminChatWidget: React.FC = () => {
 
   // === Lắng nghe tin nhắn realtime ===
   useEffect(() => {
-  const handleNewMessage = (msg: Message) => {
-    if (selectedRoom && msg.roomId === selectedRoom.roomId) {
-      setMessages((prev) => [...prev, msg]);
-    }
-  };
+    const handleNewMessage = (msg: Message) => {
+      if (selectedRoom && msg.roomId === selectedRoom.roomId) {
+        setMessages((prev) => [...prev, msg]);
+      }
+    };
 
-  onNewMessage(handleNewMessage, true); // ✅ dùng adminSocket
+    onNewMessage(handleNewMessage, true); // ✅ dùng adminSocket
 
-  return () => offNewMessage(true); // ✅ gỡ listener adminSocket
-}, [selectedRoom]);
+    return () => offNewMessage(true); // ✅ gỡ listener adminSocket
+  }, [selectedRoom]);
 
 
   // === Gửi tin nhắn ===
- const handleSend = () => {
-  if (!message.trim() || !selectedRoom) return;
+  const handleSend = () => {
+    if (!message.trim() || !selectedRoom) return;
 
-  // Tạo local message trước
-  const localMsg: Message = {
-    id: Date.now(), // tạm ID local
-    roomId: selectedRoom.roomId,
-    content: message,
-    role: "admin",
-    from: {
-      id: 1,
-      name: "Admin",
+    // Tạo local message trước
+    const localMsg: Message = {
+      id: Date.now(), // tạm ID local
+      roomId: selectedRoom.roomId,
+      content: message,
       role: "admin",
-    },
+      from: {
+        id: 1,
+        name: "Admin",
+        role: "admin",
+      },
+    };
+
+    setMessages((prev) => [...prev, localMsg]);
+
+    // Gửi qua socket
+    sendMessage(message, selectedRoom.roomId, true);
+
+    setMessage("");
   };
-
-  setMessages((prev) => [...prev, localMsg]);
-
-  // Gửi qua socket
-  sendMessage(message, selectedRoom.roomId, true);
-
-  setMessage("");
-};
 
 
   // === UI ===
@@ -154,8 +154,8 @@ const AdminChatWidget: React.FC = () => {
             </span>
           </div>
         </div>
-        <button 
-          onClick={() => setOpen(false)} 
+        <button
+          onClick={() => setOpen(false)}
           className="hover:bg-white/20 rounded-full p-1 transition-colors"
         >
           <X className="w-5 h-5" />
@@ -171,9 +171,8 @@ const AdminChatWidget: React.FC = () => {
           {rooms.map((room) => (
             <div
               key={room.roomId}
-              className={`p-3 cursor-pointer hover:bg-gray-100 transition-colors border-b border-gray-100 ${
-                selectedRoom?.roomId === room.roomId ? "bg-emerald-50 border-l-4 border-l-emerald-500" : ""
-              }`}
+              className={`p-3 cursor-pointer hover:bg-gray-100 transition-colors border-b border-gray-100 ${selectedRoom?.roomId === room.roomId ? "bg-emerald-50 border-l-4 border-l-emerald-500" : ""
+                }`}
               onClick={() => selectRoom(room)}
             >
               <div className="text-sm font-medium text-gray-800 truncate">
@@ -198,34 +197,32 @@ const AdminChatWidget: React.FC = () => {
               {/* Chat messages */}
               <div className="flex-1 p-3 overflow-y-auto bg-gray-50 space-y-3">
                 {messages.map((msg) => {
-  const msgRole = msg.role || msg.from?.role || "user"; // fallback an toàn
+                  const msgRole = msg.role || msg.from?.role || "user"; // fallback an toàn
 
-  return (
-    <div
-      key={msg.id ?? Math.random()}
-      className={`flex ${msgRole === "admin" ? "justify-end" : "justify-start"}`}
-    >
-      <div className="flex flex-col max-w-[70%]">
-        <div
-          className={`px-4 py-2 rounded-2xl text-sm shadow-sm ${
-            msgRole === "admin"
-              ? "bg-emerald-600 text-white rounded-br-md"
-              : "bg-white text-gray-800 border border-gray-200 rounded-bl-md"
-          }`}
-        >
-          {msg.content}
-        </div>
-        <span
-          className={`text-xs text-gray-400 mt-1 ${
-            msgRole === "admin" ? "text-right" : "text-left"
-          }`}
-        >
-          {msgRole === "admin" ? "Admin" : selectedRoom?.userName}
-        </span>
-      </div>
-    </div>
-  );
-})}
+                  return (
+                    <div
+                      key={msg.id ?? Math.random()}
+                      className={`flex ${msgRole === "admin" ? "justify-end" : "justify-start"}`}
+                    >
+                      <div className="flex flex-col max-w-[70%]">
+                        <div
+                          className={`px-4 py-2 rounded-2xl text-sm shadow-sm ${msgRole === "admin"
+                              ? "bg-emerald-600 text-white rounded-br-md"
+                              : "bg-white text-gray-800 border border-gray-200 rounded-bl-md"
+                            }`}
+                        >
+                          {msg.content}
+                        </div>
+                        <span
+                          className={`text-xs text-gray-400 mt-1 ${msgRole === "admin" ? "text-right" : "text-left"
+                            }`}
+                        >
+                          {msgRole === "admin" ? "Admin" : selectedRoom?.userName}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
 
                 <div ref={messagesEndRef} />
               </div>

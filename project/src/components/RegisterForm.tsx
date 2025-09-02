@@ -16,7 +16,7 @@ const RegisterForm = () => {
     confirmPassword: '',
     agreedToTerms: false,
   });
- 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -39,7 +39,7 @@ const RegisterForm = () => {
     }
 
     setIsLoading(true);
-    
+
     try {
       const response = await fetch('http://localhost:3000/api/user/register', {
         method: 'POST',

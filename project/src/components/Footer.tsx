@@ -18,7 +18,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-gray-400 leading-relaxed">
-              Chuyên cung cấp xe hơi chất lượng cao với dịch vụ tận tâm. 
+              Chuyên cung cấp xe hơi chất lượng cao với dịch vụ tận tâm.
               Hơn 15 năm kinh nghiệm trong ngành ô tô.
             </p>
             <div className="flex space-x-4">

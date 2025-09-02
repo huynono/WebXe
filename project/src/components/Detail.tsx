@@ -91,7 +91,7 @@ const ProductDetail = () => {
   const [isModalOpenCart, setIsModalOpenCart] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
-const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   // Edit Review Modal States
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
@@ -754,115 +754,115 @@ const [selectedImage, setSelectedImage] = useState<string | null>(null);
             </div>
 
             {/* Reviews Section */}
-           <div className="mt-16">
-      <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-        <h3 className="text-2xl font-bold text-gray-900 mb-6">Đánh giá sản phẩm</h3>
+            <div className="mt-16">
+              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Đánh giá sản phẩm</h3>
 
-        {reviews.length > 0 ? (
-          <div className="space-y-8">
-            {reviews.map((review) => (
-              <div
-                key={review.id}
-                className="p-6 rounded-xl border border-gray-200 bg-gradient-to-r from-gray-50 to-white shadow-sm relative"
-              >
-                {/* User + Rating */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
-                      {review.user.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">{review.user.name}</p>
-                      <p className="text-sm text-gray-500">
-                        {new Date(review.createdAt).toLocaleDateString("vi-VN")}
-                      </p>
-                    </div>
-                  </div>
+                {reviews.length > 0 ? (
+                  <div className="space-y-8">
+                    {reviews.map((review) => (
+                      <div
+                        key={review.id}
+                        className="p-6 rounded-xl border border-gray-200 bg-gradient-to-r from-gray-50 to-white shadow-sm relative"
+                      >
+                        {/* User + Rating */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
+                              {review.user.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-900">{review.user.name}</p>
+                              <p className="text-sm text-gray-500">
+                                {new Date(review.createdAt).toLocaleDateString("vi-VN")}
+                              </p>
+                            </div>
+                          </div>
 
-                  <div className="flex items-center space-x-3">
-                    {/* StarRating ở đây */}
-                    {review.user.id === currentUserId && (
-                      <div className="relative">
-                        <button
-                          onClick={() =>
-                            setOpenMenuId(openMenuId === review.id ? null : review.id)
-                          }
-                          className="p-2 rounded-full hover:bg-gray-100"
-                        >
-                          <MoreVertical className="w-5 h-5 text-gray-600" />
-                        </button>
+                          <div className="flex items-center space-x-3">
+                            {/* StarRating ở đây */}
+                            {review.user.id === currentUserId && (
+                              <div className="relative">
+                                <button
+                                  onClick={() =>
+                                    setOpenMenuId(openMenuId === review.id ? null : review.id)
+                                  }
+                                  className="p-2 rounded-full hover:bg-gray-100"
+                                >
+                                  <MoreVertical className="w-5 h-5 text-gray-600" />
+                                </button>
 
-                        {openMenuId === review.id && (
-                          <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                            <button
-                              onClick={() => handleEditReview(review)}
-                              className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
-                            >
-                              ✏️ Sửa
-                            </button>
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                handleDeleteReview(review.id);
-                              }}
-                              className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                            >
-                              🗑 Xóa
-                            </button>
+                                {openMenuId === review.id && (
+                                  <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                    <button
+                                      onClick={() => handleEditReview(review)}
+                                      className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                                    >
+                                      ✏️ Sửa
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        handleDeleteReview(review.id);
+                                      }}
+                                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                    >
+                                      🗑 Xóa
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Comment */}
+                        {review.comment && <p className="text-gray-700 mb-4">{review.comment}</p>}
+
+                        {/* Images */}
+                        {review.images.length > 0 && (
+                          <div className="flex flex-wrap gap-3">
+                            {review.images.map((img, idx) => (
+                              <img
+                                key={idx}
+                                src={img.url}
+                                alt={`Review ${review.id} - ${idx + 1}`}
+                                onClick={() => setSelectedImage(img.url)}
+                                className="w-24 h-24 object-cover rounded-lg shadow-md border border-gray-200 hover:scale-105 transition-transform cursor-pointer"
+                              />
+                            ))}
                           </div>
                         )}
                       </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Comment */}
-                {review.comment && <p className="text-gray-700 mb-4">{review.comment}</p>}
-
-                {/* Images */}
-                {review.images.length > 0 && (
-                  <div className="flex flex-wrap gap-3">
-                    {review.images.map((img, idx) => (
-                      <img
-                        key={idx}
-                        src={img.url}
-                        alt={`Review ${review.id} - ${idx + 1}`}
-                        onClick={() => setSelectedImage(img.url)}
-                        className="w-24 h-24 object-cover rounded-lg shadow-md border border-gray-200 hover:scale-105 transition-transform cursor-pointer"
-                      />
                     ))}
                   </div>
+                ) : (
+                  <p className="text-gray-500">Chưa có đánh giá nào cho sản phẩm này.</p>
                 )}
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500">Chưa có đánh giá nào cho sản phẩm này.</p>
-        )}
-      </div>
 
-      {/* Modal xem ảnh lớn */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div className="relative max-w-3xl max-h-[90vh]">
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute top-3 right-3 text-white bg-black bg-opacity-50 p-2 rounded-full"
-            >
-              <X className="w-6 h-6" />
-            </button>
-            <img
-              src={selectedImage}
-              alt="Phóng to"
-              className="rounded-lg shadow-lg max-h-[90vh] object-contain"
-            />
-          </div>
-        </div>
-      )}
-    </div>
+              {/* Modal xem ảnh lớn */}
+              {selectedImage && (
+                <div
+                  className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+                  onClick={() => setSelectedImage(null)}
+                >
+                  <div className="relative max-w-3xl max-h-[90vh]">
+                    <button
+                      onClick={() => setSelectedImage(null)}
+                      className="absolute top-3 right-3 text-white bg-black bg-opacity-50 p-2 rounded-full"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
+                    <img
+                      src={selectedImage}
+                      alt="Phóng to"
+                      className="rounded-lg shadow-lg max-h-[90vh] object-contain"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
 
 
 
@@ -903,8 +903,8 @@ const [selectedImage, setSelectedImage] = useState<string | null>(null);
                     >
                       <Star
                         className={`h-8 w-8 ${star <= (hoveredStar || editRating)
-                            ? 'text-yellow-400 fill-current'
-                            : 'text-gray-300'
+                          ? 'text-yellow-400 fill-current'
+                          : 'text-gray-300'
                           }`}
                       />
                     </button>

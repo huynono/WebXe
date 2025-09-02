@@ -20,7 +20,7 @@ class DashboardController {
       });
 
       const monthlyStats = {};
-      orders.forEach(order => {
+      orders.forEach((order) => {
         const month = order.createdAt.toISOString().slice(0, 7); // "YYYY-MM"
         if (!monthlyStats[month]) {
           monthlyStats[month] = { revenue: 0, orders: 0 };
@@ -39,8 +39,9 @@ class DashboardController {
 
       res.json({ success: true, data: result });
     } catch (error) {
-      console.error("🔥 Revenue chart error:", error);
-      res.status(500).json({ success: false, message: "Lỗi khi lấy dữ liệu doanh thu" });
+      res
+        .status(500)
+        .json({ success: false, message: "Lỗi khi lấy dữ liệu doanh thu" });
     }
   }
 
@@ -60,7 +61,7 @@ class DashboardController {
       });
 
       const monthlyStats = {};
-      users.forEach(user => {
+      users.forEach((user) => {
         const month = user.createdAt.toISOString().slice(0, 7);
         if (!monthlyStats[month]) {
           monthlyStats[month] = 0;
@@ -77,8 +78,12 @@ class DashboardController {
 
       res.json({ success: true, data: result });
     } catch (error) {
-      console.error("🔥 Customer growth error:", error);
-      res.status(500).json({ success: false, message: "Lỗi khi lấy dữ liệu tăng trưởng khách hàng" });
+      res
+        .status(500)
+        .json({
+          success: false,
+          message: "Lỗi khi lấy dữ liệu tăng trưởng khách hàng",
+        });
     }
   }
 
@@ -90,7 +95,9 @@ class DashboardController {
           order: {
             paymentStatus: "paid",
             createdAt: {
-              gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+              gte: new Date(
+                new Date().setFullYear(new Date().getFullYear() - 1)
+              ),
             },
           },
         },
@@ -107,7 +114,7 @@ class DashboardController {
       });
 
       const productStats = {};
-      orderItems.forEach(item => {
+      orderItems.forEach((item) => {
         const pid = item.product.id;
         if (!productStats[pid]) {
           productStats[pid] = {
@@ -126,8 +133,12 @@ class DashboardController {
 
       res.json({ success: true, data: result });
     } catch (error) {
-      console.error("🔥 Best-selling products error:", error);
-      res.status(500).json({ success: false, message: "Lỗi khi lấy dữ liệu sản phẩm bán chạy" });
+      res
+        .status(500)
+        .json({
+          success: false,
+          message: "Lỗi khi lấy dữ liệu sản phẩm bán chạy",
+        });
     }
   }
 
@@ -154,7 +165,7 @@ class DashboardController {
       });
 
       const customerStats = {};
-      orders.forEach(order => {
+      orders.forEach((order) => {
         const uid = order.user.id;
         if (!customerStats[uid]) {
           customerStats[uid] = {
@@ -175,8 +186,9 @@ class DashboardController {
 
       res.json({ success: true, data: result });
     } catch (error) {
-      console.error("🔥 Top customers error:", error);
-      res.status(500).json({ success: false, message: "Lỗi khi lấy dữ liệu khách hàng" });
+      res
+        .status(500)
+        .json({ success: false, message: "Lỗi khi lấy dữ liệu khách hàng" });
     }
   }
 }

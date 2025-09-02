@@ -20,10 +20,10 @@ interface AddToCartModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: Product;
-  onAddToCart: (data: { 
-    productId: number; 
-    colorId: number | null; 
-    quantity: number 
+  onAddToCart: (data: {
+    productId: number;
+    colorId: number | null;
+    quantity: number
   }) => void;
 }
 
@@ -42,60 +42,60 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
 
   if (!isOpen) return null;
 
- const handleSubmit = async () => {
-  if (product.colors && product.colors.length > 0 && selectedColorId === null) return;
+  const handleSubmit = async () => {
+    if (product.colors && product.colors.length > 0 && selectedColorId === null) return;
 
-  setIsSubmitting(true);
+    setIsSubmitting(true);
 
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) throw new Error('Bạn phải đăng nhập');
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('Bạn phải đăng nhập');
 
-    const response = await fetch('http://localhost:3000/api/cart/addcart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
+      const response = await fetch('http://localhost:3000/api/cart/addcart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity,
+          colorId: selectedColorId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Thêm vào giỏ hàng thất bại');
+      }
+
+      // ✅ Gửi item mới lên parent để cập nhật giỏ hàng
+      onAddToCart({
         productId: product.id,
-        quantity,
         colorId: selectedColorId,
-      }),
-    });
+        quantity,
+      });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Thêm vào giỏ hàng thất bại');
+      // Reset
+      onClose();
+      setSelectedColorId(product.colors && product.colors.length > 0 ? product.colors[0].id : null);
+      setQuantity(1);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert('Có lỗi xảy ra');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // ✅ Gửi item mới lên parent để cập nhật giỏ hàng
-    onAddToCart({
-      productId: product.id,
-      colorId: selectedColorId,
-      quantity,
-    });
-
-    // Reset
-    onClose();
-    setSelectedColorId(product.colors && product.colors.length > 0 ? product.colors[0].id : null);
-    setQuantity(1);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      alert(error.message);
-    } else {
-      alert('Có lỗi xảy ra');
-    }
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
 
 
 
-  
+
 
   const incrementQuantity = () => {
     if (quantity < 10) setQuantity((prev) => prev + 1);
@@ -161,11 +161,10 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                   <button
                     key={color.id}
                     onClick={() => setSelectedColorId(color.id)}
-                    className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
-                      selectedColorId === color.id
+                    className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${selectedColorId === color.id
                         ? 'border-blue-500 bg-blue-50 shadow-md'
                         : 'border-gray-200 bg-white hover:border-gray-300'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center space-x-4">
                       <div

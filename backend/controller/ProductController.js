@@ -61,9 +61,6 @@ exports.addProduct = async (req, res) => {
       })
       .filter(Boolean);
 
-    console.log("🎨 Colors từ FE:", rawColors);
-    console.log("🎨 ColorsBody sau validate:", colorsBody);
-
     // Upload ảnh
     const imageFile = req.files?.image?.[0] || null;
     const imageFiles = req.files?.images || [];
@@ -79,7 +76,6 @@ exports.addProduct = async (req, res) => {
         });
         imageUrl = result.secure_url;
       } catch (err) {
-        console.error("❌ Lỗi upload ảnh chính:", err);
         return res
           .status(500)
           .json({ message: "❌ Upload ảnh chính thất bại" });
@@ -96,7 +92,6 @@ exports.addProduct = async (req, res) => {
           imageUrls.push(result.secure_url);
         }
       } catch (err) {
-        console.error("❌ Lỗi upload ảnh phụ:", err);
         return res.status(500).json({ message: "❌ Upload ảnh phụ thất bại" });
       }
     }
@@ -159,7 +154,6 @@ exports.addProduct = async (req, res) => {
         .status(400)
         .json({ message: `❌ Slug "${req.body.slug}" đã tồn tại!` });
     }
-    console.error("❌ Lỗi server:", error);
     res.status(500).json({ message: "Lỗi server", error: error.message });
   }
 };
@@ -328,7 +322,6 @@ exports.getAllProducts = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("❌ Lỗi server khi lấy sản phẩm:", error);
     res.status(500).json({
       message: "Lỗi server khi lấy sản phẩm",
       error: error.message,
@@ -374,7 +367,6 @@ exports.getProductBySlug = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("❌ Lỗi server khi lấy sản phẩm theo slug:", error);
     res.status(500).json({
       message: "Lỗi server khi lấy sản phẩm theo slug",
       error: error.message,
@@ -399,7 +391,6 @@ exports.deleteProduct = async (req, res) => {
 
     res.status(200).json({ message: "✅ Xóa sản phẩm thành công" });
   } catch (error) {
-    console.error("Lỗi server khi xóa sản phẩm:", error);
     res.status(500).json({
       message: "Lỗi server khi xóa sản phẩm",
       error: error.message,
@@ -452,7 +443,6 @@ exports.updateProduct = async (req, res) => {
         });
         imageUrl = result.secure_url;
       } catch (uploadError) {
-        console.error("❌ Lỗi upload ảnh chính:", uploadError);
         return res
           .status(500)
           .json({ message: "❌ Lỗi upload ảnh chính lên Cloudinary" });
@@ -471,7 +461,6 @@ exports.updateProduct = async (req, res) => {
           imageUrls.push(result.secure_url);
         }
       } catch (uploadError) {
-        console.error("❌ Lỗi upload ảnh phụ:", uploadError);
         return res
           .status(500)
           .json({ message: "❌ Lỗi upload ảnh phụ lên Cloudinary" });
@@ -544,7 +533,6 @@ exports.updateProduct = async (req, res) => {
     if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
       return res.status(400).json({ message: `❌ Slug "${slug}" đã tồn tại!` });
     }
-    console.error("❌ Lỗi server khi cập nhật sản phẩm:", error);
     res.status(500).json({
       message: "Lỗi server khi cập nhật sản phẩm",
       error: error.message,
@@ -575,7 +563,6 @@ exports.updateProductStatus = async (req, res) => {
       product: updatedProduct,
     });
   } catch (error) {
-    console.error("❌ Lỗi server khi cập nhật trạng thái sản phẩm:", error);
     res.status(500).json({
       message: "Lỗi server khi cập nhật trạng thái sản phẩm",
       error: error.message,

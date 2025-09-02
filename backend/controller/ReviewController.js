@@ -24,7 +24,6 @@ exports.createReview = async (req, res) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       userId = decoded.userId || decoded.id;
     } catch (err) {
-      console.error("❌ Lỗi decode JWT:", err);
       return res.status(401).json({ message: "❌ Token không hợp lệ" });
     }
 
@@ -68,7 +67,6 @@ exports.createReview = async (req, res) => {
       review: newReview,
     });
   } catch (error) {
-    console.error("❌ Lỗi khi tạo review:", error);
     return res
       .status(500)
       .json({ message: "❌ Lỗi server", error: error.message });
@@ -93,7 +91,6 @@ exports.getReviewsByProduct = async (req, res) => {
       reviews,
     });
   } catch (error) {
-    console.error("❌ Lỗi khi lấy review:", error);
     return res
       .status(500)
       .json({ message: "Lỗi server", error: error.message });
@@ -166,7 +163,6 @@ exports.updateReview = async (req, res) => {
       review: updated,
     });
   } catch (error) {
-    console.error("❌ Lỗi khi cập nhật review:", error);
     return res
       .status(500)
       .json({ message: "Lỗi server", error: error.message });
@@ -201,7 +197,6 @@ exports.adminDeleteReview = async (req, res) => {
       .status(200)
       .json({ message: "✅ Admin đã xóa review thành công" });
   } catch (error) {
-    console.error("❌ Lỗi khi admin xóa review:", error);
     return res
       .status(500)
       .json({ message: "Lỗi server", error: error.message });
@@ -250,7 +245,6 @@ exports.deleteReviewByUser = async (req, res) => {
 
     return res.status(200).json({ message: "✅ Review đã được xóa hoàn toàn" });
   } catch (error) {
-    console.error("❌ Lỗi khi xóa review:", error);
     return res
       .status(500)
       .json({ message: "❌ Lỗi server", error: error.message });
@@ -286,7 +280,6 @@ exports.getAllReviews = async (req, res) => {
       reviews,
     });
   } catch (error) {
-    console.error("❌ Lỗi khi lấy tất cả review:", error);
     return res.status(500).json({
       message: "❌ Lỗi server",
       error: error.message,

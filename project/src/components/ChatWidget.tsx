@@ -46,56 +46,56 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, userName }) => {
 
   // === Ensure room exists and load messages ===
   useEffect(() => {
-  if (!userId) return;
+    if (!userId) return;
 
-  const initializeChat = async () => {
-    setIsLoading(true);
-    try {
-      // 1️⃣ Lấy room hiện tại từ localStorage
-      let roomId = Number(localStorage.getItem(`chat_currentRoom_${userId}`)) || 0;
+    const initializeChat = async () => {
+      setIsLoading(true);
+      try {
+        // 1️⃣ Lấy room hiện tại từ localStorage
+        let roomId = Number(localStorage.getItem(`chat_currentRoom_${userId}`)) || 0;
 
-      // 2️⃣ Nếu chưa có room, tạo room mới
-      if (!roomId) {
-        const roomResponse = await fetch("http://localhost:3000/api/chatadmin/rooms", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-          },
-          body: JSON.stringify({ userId }),
-        });
-        const roomData = await roomResponse.json();
-        roomId = roomData.roomId;
-        localStorage.setItem(`chat_currentRoom_${userId}`, roomId.toString());
+        // 2️⃣ Nếu chưa có room, tạo room mới
+        if (!roomId) {
+          const roomResponse = await fetch("http://localhost:3000/api/chatadmin/rooms", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+            },
+            body: JSON.stringify({ userId }),
+          });
+          const roomData = await roomResponse.json();
+          roomId = roomData.roomId;
+          localStorage.setItem(`chat_currentRoom_${userId}`, roomId.toString());
+        }
+
+        // 3️⃣ Load tin nhắn từ localStorage theo roomId
+        const stored = localStorage.getItem(`chat_messages_${userId}_room_${roomId}`);
+        if (stored) {
+          const cached: Message[] = JSON.parse(stored);
+          setMessages(cached);
+        }
+
+        // 4️⃣ Fetch lịch sử tin nhắn từ API theo roomId
+        const messagesResponse = await fetch(
+          `http://localhost:3000/api/chatadmin/user/${userId}/messages/${roomId}`,
+          { headers: { Authorization: `Bearer ${localStorage.getItem("token") || ""}` } }
+        );
+        const messagesData = await messagesResponse.json();
+        if (messagesData.success && Array.isArray(messagesData.messages)) {
+          setMessages(messagesData.messages);
+          localStorage.setItem(`chat_messages_${userId}_room_${roomId}`, JSON.stringify(messagesData.messages));
+        }
+
+      } catch (err) {
+        console.error("Error initializing chat:", err);
+      } finally {
+        setIsLoading(false);
       }
+    };
 
-      // 3️⃣ Load tin nhắn từ localStorage theo roomId
-      const stored = localStorage.getItem(`chat_messages_${userId}_room_${roomId}`);
-      if (stored) {
-        const cached: Message[] = JSON.parse(stored);
-        setMessages(cached);
-      }
-
-      // 4️⃣ Fetch lịch sử tin nhắn từ API theo roomId
-      const messagesResponse = await fetch(
-        `http://localhost:3000/api/chatadmin/user/${userId}/messages/${roomId}`,
-        { headers: { Authorization: `Bearer ${localStorage.getItem("token") || ""}` } }
-      );
-      const messagesData = await messagesResponse.json();
-      if (messagesData.success && Array.isArray(messagesData.messages)) {
-        setMessages(messagesData.messages);
-        localStorage.setItem(`chat_messages_${userId}_room_${roomId}`, JSON.stringify(messagesData.messages));
-      }
-
-    } catch (err) {
-      console.error("Error initializing chat:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  initializeChat();
-}, [userId]);
+    initializeChat();
+  }, [userId]);
 
 
   // === Save messages to localStorage whenever they change ===
@@ -109,14 +109,14 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, userName }) => {
   useEffect(() => {
     const handleNewMessage = (msg: Message) => {
       console.log("New message from socket:", msg);
-      
+
       // Add message if it's for this user or from admin
       if (msg.from.id === userId || msg.role === "admin") {
         setMessages(prev => {
           // Avoid duplicates by checking if message already exists
-          const exists = prev.some(m => m.id === msg.id || 
+          const exists = prev.some(m => m.id === msg.id ||
             (m.content === msg.content && m.from.id === msg.from.id && Math.abs((m.id || 0) - (msg.id || 0)) < 1000));
-          
+
           if (exists) {
             console.log("Message already exists, skipping");
             return prev;
@@ -152,10 +152,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, userName }) => {
       roomId: 0, // Will be set by backend
       content: message,
       role: "user",
-      from: { 
-        id: userId, 
-        name: userName || "Bạn", 
-        role: "user" 
+      from: {
+        id: userId,
+        name: userName || "Bạn",
+        role: "user"
       },
     };
 
@@ -189,17 +189,16 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, userName }) => {
                 <div>
                   <h3 className="font-bold text-lg">Hỗ trợ khách hàng</h3>
                   <div className="flex items-center space-x-2 mt-1">
-                    <div className={`w-2 h-2 rounded-full shadow-sm ${
-                      isConnected ? "bg-green-400 animate-pulse" : "bg-red-400"
-                    }`}></div>
+                    <div className={`w-2 h-2 rounded-full shadow-sm ${isConnected ? "bg-green-400 animate-pulse" : "bg-red-400"
+                      }`}></div>
                     <span className="text-sm text-blue-100 font-medium">
                       {isConnected ? "Đang hoạt động" : "Đang kết nối..."}
                     </span>
                   </div>
                 </div>
               </div>
-              <button 
-                onClick={() => setOpen(false)} 
+              <button
+                onClick={() => setOpen(false)}
                 className="hover:bg-white/20 rounded-2xl p-2 transition-all duration-200 hover:scale-110"
               >
                 <X className="w-6 h-6" />
@@ -229,11 +228,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, userName }) => {
               messages.map(msg => (
                 <div key={msg.id || Math.random()} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div className="flex flex-col max-w-[85%]">
-                    <div className={`px-6 py-4 rounded-3xl text-sm shadow-lg backdrop-blur-sm transition-all duration-200 hover:shadow-xl ${
-                      msg.role === "user" 
-                        ? "bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-br-lg shadow-blue-200" 
+                    <div className={`px-6 py-4 rounded-3xl text-sm shadow-lg backdrop-blur-sm transition-all duration-200 hover:shadow-xl ${msg.role === "user"
+                        ? "bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-br-lg shadow-blue-200"
                         : "bg-white text-gray-800 border border-gray-100 rounded-bl-lg shadow-gray-200"
-                    }`}>
+                      }`}>
                       <p className="leading-relaxed">{msg.content}</p>
                     </div>
                     <div className={`mt-2 ${msg.role === "user" ? "text-right" : "text-left"}`}>
@@ -273,7 +271,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, userName }) => {
           </div>
         </div>
       ) : (
-        <button 
+        <button
           onClick={handleOpen}
           className="bg-gradient-to-br from-blue-600 to-indigo-700 p-5 rounded-3xl shadow-2xl hover:from-blue-700 hover:to-indigo-800 hover:scale-110 transition-all duration-300 group relative overflow-hidden"
         >

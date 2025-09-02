@@ -5,7 +5,7 @@ const LoginAdmin: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-//   const [rememberMe, setRememberMe] = useState(false);
+  //   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
@@ -48,7 +48,7 @@ const LoginAdmin: React.FC = () => {
     }
   };
 
-//   const handleForgot = () => alert('Tính năng quên mật khẩu sẽ được triển khai sau!');
+  //   const handleForgot = () => alert('Tính năng quên mật khẩu sẽ được triển khai sau!');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center p-4">
@@ -75,7 +75,7 @@ const LoginAdmin: React.FC = () => {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  
+
                   className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'}`}
                 />
               </div>
@@ -91,7 +91,7 @@ const LoginAdmin: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  
+
                   className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.password ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'}`}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}

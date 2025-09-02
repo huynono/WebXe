@@ -44,15 +44,15 @@ declare global {
   }
 
   interface FBUserInfo {
-  id: string;
-  name: string;
-  email?: string;
-  picture?: {
-    data: {
-      url: string;
+    id: string;
+    name: string;
+    email?: string;
+    picture?: {
+      data: {
+        url: string;
+      };
     };
-  };
-}
+  }
 
   interface FBLoginResponse {
     status: "connected" | "not_authorized" | "unknown";

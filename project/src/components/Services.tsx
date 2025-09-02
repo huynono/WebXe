@@ -63,7 +63,7 @@ const Services = () => {
                   <div className={`w-full h-full bg-gradient-to-br ${getColorClasses(service.color)} rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-2xl`}>
                     <Icon className="w-10 h-10 text-white" />
                   </div>
-                  
+
                   {/* Decorative Ring */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${getColorClasses(service.color)} rounded-2xl opacity-20 scale-125 group-hover:scale-150 transition-transform duration-300`}></div>
                 </div>

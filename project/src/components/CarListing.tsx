@@ -135,10 +135,10 @@ const CarListing: React.FC = () => {
     setPage(1);
   };
 
-  const hasActiveFilters = category || fuelTypes.length > 0 || seats.length > 0 || 
-                          yearFrom || yearTo || searchTerm ||
-                          priceRange[0] > 0 || priceRange[1] < PRICE_MAX ||
-                          kmRange[0] > 0 || kmRange[1] < KM_MAX;
+  const hasActiveFilters = category || fuelTypes.length > 0 || seats.length > 0 ||
+    yearFrom || yearTo || searchTerm ||
+    priceRange[0] > 0 || priceRange[1] < PRICE_MAX ||
+    kmRange[0] > 0 || kmRange[1] < KM_MAX;
 
   useEffect(() => {
     fetchCategories();
@@ -151,7 +151,7 @@ const CarListing: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <Header />
-      
+
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -169,7 +169,7 @@ const CarListing: React.FC = () => {
             <p className="text-xl text-blue-100 mb-8 max-w-2xl">
               Khám phá {totalProducts.toLocaleString()} chiếc xe chất lượng cao với giá tốt nhất
             </p>
-            
+
             {/* Search Bar */}
             <div className="relative max-w-2xl mx-auto lg:mx-0">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={24} />
@@ -210,9 +210,8 @@ const CarListing: React.FC = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8">
         {/* Sidebar Filters */}
-        <aside className={`w-full lg:w-80 flex-shrink-0 transition-all duration-300 ${
-          showFilters ? 'block' : 'hidden lg:block'
-        }`}>
+        <aside className={`w-full lg:w-80 flex-shrink-0 transition-all duration-300 ${showFilters ? 'block' : 'hidden lg:block'
+          }`}>
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6 space-y-6 sticky top-4">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -441,8 +440,8 @@ const CarListing: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {cars.map((car, index) => (
-                <div 
-                  key={car.id} 
+                <div
+                  key={car.id}
                   className="animate-fade-in-up"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >

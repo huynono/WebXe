@@ -56,29 +56,28 @@ const CarCard: React.FC<{ car: Product; onNavigate: (slug: string) => void }> = 
       : `${BASE_URL}${car.image}`
     : '';
 
-  const formatPrice = (price: number) => 
-    new Intl.NumberFormat('vi-VN', { 
-      style: 'currency', 
-      currency: 'VND' 
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
     }).format(price);
 
-  const discountPercentage = car.originalPrice 
+  const discountPercentage = car.originalPrice
     ? Math.round(((car.originalPrice - car.price) / car.originalPrice) * 100)
     : 0;
 
   return (
     <div
-    onClick={() => onNavigate(car.slug || '')}
-    className="group bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 overflow-hidden border border-gray-100">
+      onClick={() => onNavigate(car.slug || '')}
+      className="group bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 overflow-hidden border border-gray-100">
       {/* Image Section */}
       <div className="relative overflow-hidden">
         <div className="aspect-[4/3] relative bg-gray-100">
           <img
             src={imgUrl}
             alt={car.name}
-            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
             onLoad={() => setImageLoaded(true)}
           />
           {!imageLoaded && (
@@ -110,20 +109,19 @@ const CarCard: React.FC<{ car: Product; onNavigate: (slug: string) => void }> = 
 
         {/* Action Buttons */}
         <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               setIsLiked(!isLiked);
             }}
-            className={`w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 backdrop-blur-sm ${
-              isLiked 
-                ? 'bg-red-500 text-white' 
+            className={`w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 backdrop-blur-sm ${isLiked
+                ? 'bg-red-500 text-white'
                 : 'bg-white/90 text-gray-600 hover:bg-white hover:text-red-500'
-            }`}
+              }`}
           >
             <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
           </button>
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               onNavigate(car.slug || '');
@@ -177,25 +175,25 @@ const CarCard: React.FC<{ car: Product; onNavigate: (slug: string) => void }> = 
           </div>
         </div>
         {/* Colors Section */}
-    {car.colors && car.colors.length > 0 && (
-  <div className="mb-6">
-    <div className="flex items-center gap-2 mb-2">
-      <span className="text-sm text-gray-600">Màu sắc:</span>
-      <div className="flex flex-wrap gap-2">
-        {car.colors.slice(0, 5).map((color) => (
-          <div
-            key={color.id}
-            title={color.name}
-            className="w-6 h-6 rounded-full border shadow-sm cursor-pointer hover:scale-110 transition-transform"
-            style={{
-              background: color.hex || '#ccc',
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  </div>
-)}
+        {car.colors && car.colors.length > 0 && (
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm text-gray-600">Màu sắc:</span>
+              <div className="flex flex-wrap gap-2">
+                {car.colors.slice(0, 5).map((color) => (
+                  <div
+                    key={color.id}
+                    title={color.name}
+                    className="w-6 h-6 rounded-full border shadow-sm cursor-pointer hover:scale-110 transition-transform"
+                    style={{
+                      background: color.hex || '#ccc',
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* CTA Button */}
         <button
@@ -259,7 +257,7 @@ const FeaturedCars = () => {
       {/* Background Decorations */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-100/40 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-cyan-100/40 to-transparent rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
-      
+
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
@@ -290,15 +288,15 @@ const FeaturedCars = () => {
           {loading
             ? Array.from({ length: 8 }).map((_, index) => <CarSkeleton key={index} />)
             : products.slice(0, 8).map((car) => (
-                <CarCard key={car.id} car={car} onNavigate={handleNavigate} />
-              ))
+              <CarCard key={car.id} car={car} onNavigate={handleNavigate} />
+            ))
           }
         </div>
 
         {/* View More Button */}
         {!loading && products.length > 0 && (
           <div className="text-center mt-16">
-            <button 
+            <button
               onClick={() => navigate('/cars')}
               className="group bg-white hover:bg-blue-600 border-2 border-blue-600 text-blue-600 hover:text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:scale-95"
             >

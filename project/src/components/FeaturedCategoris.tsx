@@ -98,12 +98,12 @@ const FeaturedCategories: React.FC = () => {
           {categories.map((category) => {
             const IconComponent = getIcon(category.name);
 
-         
+
             const imgUrl = category.image
               ? category.image.startsWith('http')
                 ? category.image
                 : `${BASE_URL}${category.image}`
-                : '';    
+              : '';
 
             return (
               <SwiperSlide key={category.id}>

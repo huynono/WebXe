@@ -37,7 +37,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
               </div>
             </div>
           </div>
-          
+
           {/* Hero Image Section */}
           <div className="relative group">
             <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -54,7 +54,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
               </div>
             </div>
           </div>
-          
+
           {/* Features Card */}
           <div className="backdrop-blur-md bg-white/80 border border-white/50 p-8 rounded-3xl shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full"></div>
@@ -90,7 +90,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-blue-500/5 via-cyan-500/5 to-transparent rounded-bl-full"></div>
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-indigo-500/5 via-purple-500/5 to-transparent rounded-tr-full"></div>
-            
+
             {/* Mobile Logo */}
             <div className="lg:hidden flex items-center justify-center space-x-4 mb-8">
               <div className="relative">

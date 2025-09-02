@@ -11,8 +11,8 @@ const transformMessage = (dbMessage) => ({
     id: dbMessage.user.id,
     name: dbMessage.user.name,
     email: dbMessage.user.email,
-    role: dbMessage.role
-  }
+    role: dbMessage.role,
+  },
 });
 
 // Lấy tất cả phòng chat (dành cho admin)
@@ -31,7 +31,6 @@ export const getChatRooms = async (req, res) => {
     });
     res.json(rooms);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Lỗi server khi lấy phòng chat" });
   }
 };
@@ -50,7 +49,6 @@ export const getMessagesByRoom = async (req, res) => {
     const transformedMessages = messages.map(transformMessage);
     res.json(transformedMessages);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Lỗi server khi lấy tin nhắn" });
   }
 };
@@ -61,12 +59,11 @@ export const createRoom = async (req, res) => {
   try {
     const room = await prisma.adminChatRoom.upsert({
       where: { userId },
-      update: {},      // không update gì nếu đã tồn tại
+      update: {}, // không update gì nếu đã tồn tại
       create: { userId }, // tạo mới nếu chưa có
     });
     res.json(room);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Lỗi server khi tạo phòng" });
   }
 };
@@ -86,14 +83,13 @@ export const sendMessage = async (req, res) => {
         userId,
         content: message,
         role: senderType, // 'admin' hoặc 'user'
-        isRead: false
+        isRead: false,
       },
       include: { user: { select: { id: true, name: true, email: true } } },
     });
 
     res.json({ success: true, message: newMessage });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Lỗi server khi gửi tin nhắn" });
   }
 };
@@ -109,7 +105,6 @@ export const markMessagesAsRead = async (req, res) => {
 
     res.json({ success: true, message: "Đã đánh dấu tin nhắn là đã đọc" });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Lỗi server khi đánh dấu tin nhắn" });
   }
 };
@@ -147,7 +142,6 @@ export const getUserMessages = async (req, res) => {
 
     res.json({ success: true, messages: transformedMessages });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Lỗi server khi lấy tin nhắn" });
   }
 };

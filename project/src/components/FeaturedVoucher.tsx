@@ -3,13 +3,13 @@ import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowRight, 
-  Percent, 
-  Gift, 
-  Truck, 
-  Tag, 
-  Clock, 
+import {
+  ArrowRight,
+  Percent,
+  Gift,
+  Truck,
+  Tag,
+  Clock,
   Users,
   Sparkles,
   Copy,
@@ -142,18 +142,18 @@ const FeaturedVoucher: React.FC = () => {
   };
 
   useEffect(() => {
-  axios
-    .get<{ vouchers: Voucher[] }>(`${BASE_URL}/api/voucher/getvoucher`)
-    .then((res) => {
-      const activeVouchers = (res.data.vouchers || []).filter(
-        (v) => v.isActive === true && new Date(v.endDate) > new Date()
-      );
-      setVouchers(activeVouchers);
-    })
-    .catch((err) => {
-      console.error('❌ Lỗi khi lấy vouchers:', err);
-    });
-}, []);
+    axios
+      .get<{ vouchers: Voucher[] }>(`${BASE_URL}/api/voucher/getvoucher`)
+      .then((res) => {
+        const activeVouchers = (res.data.vouchers || []).filter(
+          (v) => v.isActive === true && new Date(v.endDate) > new Date()
+        );
+        setVouchers(activeVouchers);
+      })
+      .catch((err) => {
+        console.error('❌ Lỗi khi lấy vouchers:', err);
+      });
+  }, []);
 
 
   const handleViewAllVouchers = () => {
@@ -222,7 +222,7 @@ const FeaturedVoucher: React.FC = () => {
                 const IconComponent = getVoucherIcon(voucher.discountType);
                 const colors = getVoucherColors(voucher.discountType);
                 const isExpiring = isExpiringSoon(voucher.endDate);
-                
+
                 const imgUrl = voucher.image
                   ? voucher.image.startsWith('http')
                     ? voucher.image
@@ -242,7 +242,7 @@ const FeaturedVoucher: React.FC = () => {
                           />
                         )}
                         <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent"></div>
-                        
+
                         {/* Discount Badge */}
                         <div className="absolute top-4 left-4 flex items-center space-x-2">
                           <div className="p-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg">

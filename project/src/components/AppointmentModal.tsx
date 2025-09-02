@@ -6,7 +6,7 @@ interface AppointmentModalProps {
   isOpen: boolean;
   onClose: () => void;
   productName: string;
-  onSubmit?: (data: AppointmentData) => Promise<void>; 
+  onSubmit?: (data: AppointmentData) => Promise<void>;
 }
 
 export interface AppointmentData {
@@ -19,9 +19,9 @@ export interface AppointmentData {
   notes: string;
 }
 
-const AppointmentModal: React.FC<AppointmentModalProps> = ({ 
-  isOpen, 
-  onClose, 
+const AppointmentModal: React.FC<AppointmentModalProps> = ({
+  isOpen,
+  onClose,
   productName
 }) => {
   const [formData, setFormData] = useState<AppointmentData>({
@@ -74,13 +74,13 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       // Gửi API về backend Express
       const res = await axios.post("http://localhost:3000/api/telegram/send", formData);
@@ -127,11 +127,11 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-screen items-center justify-center px-4">
         {/* Backdrop */}
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity"
           onClick={onClose}
         />
-        
+
         {/* Modal */}
         <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 transform transition-all">
           {/* Header */}
@@ -161,9 +161,8 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   type="text"
                   value={formData.fullName}
                   onChange={(e) => handleInputChange('fullName', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                    errors.fullName ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${errors.fullName ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="Nhập họ tên của bạn"
                 />
                 {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
@@ -178,9 +177,8 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                    errors.phone ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${errors.phone ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="0901 234 567"
                 />
                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
@@ -197,9 +195,8 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                  errors.email ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${errors.email ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="example@email.com"
               />
               {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -215,9 +212,8 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 type="text"
                 value={formData.address}
                 onChange={(e) => handleInputChange('address', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                  errors.address ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${errors.address ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="Nhập địa chỉ của bạn"
               />
               {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
@@ -235,9 +231,8 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   value={formData.preferredDate}
                   onChange={(e) => handleInputChange('preferredDate', e.target.value)}
                   min={new Date().toISOString().split('T')[0]}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                    errors.preferredDate ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${errors.preferredDate ? 'border-red-500' : 'border-gray-300'
+                    }`}
                 />
                 {errors.preferredDate && <p className="text-red-500 text-sm mt-1">{errors.preferredDate}</p>}
               </div>
@@ -250,9 +245,8 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 <select
                   value={formData.preferredTime}
                   onChange={(e) => handleInputChange('preferredTime', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                    errors.preferredTime ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${errors.preferredTime ? 'border-red-500' : 'border-gray-300'
+                    }`}
                 >
                   <option value="">Chọn giờ</option>
                   {timeSlots.map(time => (

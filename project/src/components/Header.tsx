@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Phone, Mail, MapPin, Menu, LogInIcon, ChevronDown, X, User, Settings, ShoppingBag, Heart, LogOut, Bell, CreditCard, ShoppingCart, Plus, Minus, Trash2, Bot  } from "lucide-react";
+import { Phone, Mail, MapPin, Menu, LogInIcon, ChevronDown, X, User, Settings, ShoppingBag, Heart, LogOut, Bell, CreditCard, ShoppingCart, Plus, Minus, Trash2, Bot } from "lucide-react";
 import LogoutOnInactivity from './LogoutOnInactivity';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -23,7 +23,7 @@ export type CartItemAPI = {
     name: string;
     price: number;
     image: string;
-     category?: { id: number; name: string } | string | null;
+    category?: { id: number; name: string } | string | null;
   };
   color?: {
     id: number;
@@ -70,36 +70,36 @@ const Header = () => {
   const navigate = useNavigate();
 
 
- useEffect(() => {
-  const fetchCart = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+  useEffect(() => {
+    const fetchCart = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-    const res = await fetch("http://localhost:3000/api/cart/getcartuser", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data: CartResponse = await res.json();
+      const res = await fetch("http://localhost:3000/api/cart/getcartuser", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data: CartResponse = await res.json();
 
-    setCartItems(
-      data.cart.items.map((item) => ({
-        id: item.id,                // cartItemId
-        productId: item.product.id,
-        name: item.product.name,
-        image: item.product.image,
-        price: item.product.price,
-        quantity: item.quantity,
-        // flatten khi fetch
-category: typeof item.product.category === 'string'
-  ? item.product.category
-  : item.product.category?.name || 'Unknown',
+      setCartItems(
+        data.cart.items.map((item) => ({
+          id: item.id,                // cartItemId
+          productId: item.product.id,
+          name: item.product.name,
+          image: item.product.image,
+          price: item.product.price,
+          quantity: item.quantity,
+          // flatten khi fetch
+          category: typeof item.product.category === 'string'
+            ? item.product.category
+            : item.product.category?.name || 'Unknown',
 
-        color: item.color ?? null,
-      }))
-    );
-  };
+          color: item.color ?? null,
+        }))
+      );
+    };
 
-  fetchCart();
-}, []);
+    fetchCart();
+  }, []);
 
 
 
@@ -110,93 +110,93 @@ category: typeof item.product.category === 'string'
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
-  
+
 
   // 🔹 Tính tổng số lượng sản phẩm
   const getTotalItems = () => {
-  return cartItems.length;
-};
+    return cartItems.length;
+  };
 
 
- // 🔹 Cập nhật số lượng sản phẩm (Frontend)
-const updateQuantity = async (cartItemId: number, newQuantity: number) => {
-  if (newQuantity <= 0) {
-    removeItem(cartItemId); // nhớ cũng sửa remove API nhận cartItemId
-    return;
-  }
-
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Bạn phải đăng nhập");
+  // 🔹 Cập nhật số lượng sản phẩm (Frontend)
+  const updateQuantity = async (cartItemId: number, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeItem(cartItemId); // nhớ cũng sửa remove API nhận cartItemId
       return;
     }
 
-    const response = await fetch("http://localhost:3000/api/cart/updatecart", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        cartItemId,
-        quantity: newQuantity,
-      }),
-    });
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Bạn phải đăng nhập");
+        return;
+      }
 
-    const data = await response.json();
+      const response = await fetch("http://localhost:3000/api/cart/updatecart", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          cartItemId,
+          quantity: newQuantity,
+        }),
+      });
 
-    if (!response.ok) {
-      alert(data.message || "Lỗi khi cập nhật giỏ hàng");
-      return;
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || "Lỗi khi cập nhật giỏ hàng");
+        return;
+      }
+
+      // ✅ Cập nhật lại state local
+      setCartItems(prev =>
+        prev.map(item =>
+          item.id === cartItemId ? { ...item, quantity: newQuantity } : item
+        )
+      );
+
+    } catch (error) {
+      console.error("❌ Lỗi updateQuantity:", error);
     }
-
-    // ✅ Cập nhật lại state local
-    setCartItems(prev =>
-      prev.map(item =>
-        item.id === cartItemId ? { ...item, quantity: newQuantity } : item
-      )
-    );
-
-  } catch (error) {
-    console.error("❌ Lỗi updateQuantity:", error);
-  }
-};
+  };
 
 
- // 🔹 Xóa sản phẩm khỏi giỏ hàng 
-const removeItem = async (cartItemId: number) => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Bạn phải đăng nhập");
-      return;
+  // 🔹 Xóa sản phẩm khỏi giỏ hàng 
+  const removeItem = async (cartItemId: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Bạn phải đăng nhập");
+        return;
+      }
+
+      const response = await fetch(`http://localhost:3000/api/cart/deletecart/${cartItemId}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        // Thử đọc text để debug lỗi (có thể là HTML)
+        const errorText = await response.text();
+        console.error("❌ Lỗi API:", errorText);
+        alert("Lỗi khi xóa sản phẩm");
+        return;
+      }
+
+      // ✅ Chỉ parse JSON khi chắc chắn là JSON
+      const data = await response.json();
+      console.log("✅ Xóa thành công:", data);
+
+      setCartItems(prev => prev.filter(item => item.id !== cartItemId));
+    } catch (error) {
+      console.error("❌ Lỗi removeItem:", error);
     }
-
-    const response = await fetch(`http://localhost:3000/api/cart/deletecart/${cartItemId}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      // Thử đọc text để debug lỗi (có thể là HTML)
-      const errorText = await response.text();
-      console.error("❌ Lỗi API:", errorText);
-      alert("Lỗi khi xóa sản phẩm");
-      return;
-    }
-
-    // ✅ Chỉ parse JSON khi chắc chắn là JSON
-    const data = await response.json();
-    console.log("✅ Xóa thành công:", data);
-
-    setCartItems(prev => prev.filter(item => item.id !== cartItemId));
-  } catch (error) {
-    console.error("❌ Lỗi removeItem:", error);
-  }
-};
+  };
 
 
 
@@ -302,11 +302,12 @@ const removeItem = async (cartItemId: number) => {
       color: "text-gray-600"
     },
     {
-  icon: Bot,
-  label: "Chat AI",
-  action: () => navigate("/chatai"),
-  color: "text-blue-600"
-,}
+      icon: Bot,
+      label: "Chat AI",
+      action: () => navigate("/chatai"),
+      color: "text-blue-600"
+      ,
+    }
 
   ];
 
@@ -361,15 +362,15 @@ const removeItem = async (cartItemId: number) => {
             {userName ? (
               <div className="relative">
                 {/* User Info Button */}
-                <button 
+                <button
                   onClick={() => setActiveDropdown(activeDropdown === "user" ? null : "user")}
                   className="flex items-center space-x-3 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 px-4 py-2 rounded-full border border-blue-400/30 cursor-pointer hover:from-blue-500/30 hover:to-cyan-500/30 transition-all duration-300"
                 >
                   <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white/20">
                     {userAvatar ? (
-                      <img 
-                        src={userAvatar} 
-                        alt={userName} 
+                      <img
+                        src={userAvatar}
+                        alt={userName}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -405,11 +406,11 @@ const removeItem = async (cartItemId: number) => {
       {activeDropdown === "user" && (
         <div className="fixed inset-0 z-[9999]">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/20 backdrop-blur-sm"
             onClick={() => setActiveDropdown(null)}
           ></div>
-          
+
           {/* Popup */}
           <div className="absolute top-20 right-4 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 animate-in slide-in-from-top-2 duration-200">
             {/* User Header */}
@@ -417,8 +418,8 @@ const removeItem = async (cartItemId: number) => {
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-full overflow-hidden border-3 border-white shadow-lg">
                   {userAvatar ? (
-                    <img 
-                      src={userAvatar} 
+                    <img
+                      src={userAvatar}
                       alt={userName || "User"}   // 🔹 nếu null thì dùng "User"
                       className="w-full h-full object-cover"
                     />
@@ -496,11 +497,11 @@ const removeItem = async (cartItemId: number) => {
       {activeDropdown === "cart" && (
         <div className="fixed inset-0 z-[9999]">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/20 backdrop-blur-sm"
             onClick={() => setActiveDropdown(null)}
           ></div>
-          
+
           {/* Cart Popup */}
           <div className="absolute top-20 right-4 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 animate-in slide-in-from-top-2 duration-200 max-h-[80vh] flex flex-col">
             {/* Header */}
@@ -534,30 +535,30 @@ const removeItem = async (cartItemId: number) => {
                 cartItems.map((item) => (
                   <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group">
                     <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-  <img 
-    src={item.image} 
-    alt={item.name}
-    className="w-full h-full object-cover"
-  />
-</div>
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
-<div className="flex-1 min-w-0">
-  <h4 className="font-semibold text-gray-900 text-sm truncate">{item.name}</h4>
-  <p className="text-xs text-gray-500 mb-1">{item.category}</p>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-gray-900 text-sm truncate">{item.name}</h4>
+                      <p className="text-xs text-gray-500 mb-1">{item.category}</p>
 
-  {item.color && (
-    <div className="flex items-center space-x-2 mb-1">
-      <span className="text-xs text-gray-600">Màu:</span>
-      <span className="text-xs font-medium">{item.color.name}</span>
-      <span
-        className="w-4 h-4 rounded-full border"
-        style={{ backgroundColor: item.color.hex }}
-      />
-    </div>
-  )}
+                      {item.color && (
+                        <div className="flex items-center space-x-2 mb-1">
+                          <span className="text-xs text-gray-600">Màu:</span>
+                          <span className="text-xs font-medium">{item.color.name}</span>
+                          <span
+                            className="w-4 h-4 rounded-full border"
+                            style={{ backgroundColor: item.color.hex }}
+                          />
+                        </div>
+                      )}
 
-  <p className="font-bold text-blue-600 text-sm">{formatPrice(item.price)}</p>
-</div>
+                      <p className="font-bold text-blue-600 text-sm">{formatPrice(item.price)}</p>
+                    </div>
 
 
                     <div className="flex flex-col items-end space-y-2">
@@ -566,37 +567,37 @@ const removeItem = async (cartItemId: number) => {
                       {/* Quantity Controls */}
 
 
-                      
-                     <div className="flex items-center space-x-2">
-  {/* Giảm số lượng */}
-  <button
-    onClick={() => updateQuantity(item.id, item.quantity - 1)} // ✅ item.id = cartItemId
-    className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors"
-  >
-    <Minus className="w-3 h-3 text-gray-600" />
-  </button>
 
-  {/* Hiển thị số lượng */}
-  <span className="font-semibold text-sm min-w-[20px] text-center">
-    {item.quantity}
-  </span>
+                      <div className="flex items-center space-x-2">
+                        {/* Giảm số lượng */}
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)} // ✅ item.id = cartItemId
+                          className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors"
+                        >
+                          <Minus className="w-3 h-3 text-gray-600" />
+                        </button>
 
-  {/* Tăng số lượng */}
-  <button
-    onClick={() => updateQuantity(item.id, item.quantity + 1)} // ✅
-    className="w-6 h-6 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center transition-colors"
-  >
-    <Plus className="w-3 h-3 text-blue-600" />
-  </button>
-</div>
+                        {/* Hiển thị số lượng */}
+                        <span className="font-semibold text-sm min-w-[20px] text-center">
+                          {item.quantity}
+                        </span>
 
-{/* Nút xóa sản phẩm */}
-<button
-  onClick={() => removeItem(item.id)} // ✅ item.id = cartItemId
-  className="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100"
->
-  <Trash2 className="w-3 h-3 text-red-600" />
-</button>
+                        {/* Tăng số lượng */}
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)} // ✅
+                          className="w-6 h-6 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center transition-colors"
+                        >
+                          <Plus className="w-3 h-3 text-blue-600" />
+                        </button>
+                      </div>
+
+                      {/* Nút xóa sản phẩm */}
+                      <button
+                        onClick={() => removeItem(item.id)} // ✅ item.id = cartItemId
+                        className="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        <Trash2 className="w-3 h-3 text-red-600" />
+                      </button>
 
 
 
@@ -613,7 +614,7 @@ const removeItem = async (cartItemId: number) => {
                   <span className="font-semibold text-gray-900">Tổng cộng:</span>
                   <span className="font-bold text-xl text-blue-600">{formatPrice(getTotalPrice())}</span>
                 </div>
-                
+
                 <div className="space-y-3">
                   <button
                     onClick={() => {
@@ -743,9 +744,9 @@ const removeItem = async (cartItemId: number) => {
                 >
                   <div className="p-6 space-y-2">
                     {services.map((service, index) => (
-                      <a 
-                        key={index} 
-                        href="#" 
+                      <a
+                        key={index}
+                        href="#"
                         className="block px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
                         onClick={() => setActiveDropdown(null)}
                       >
@@ -768,14 +769,14 @@ const removeItem = async (cartItemId: number) => {
                   className="relative p-3 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-cyan-50 rounded-xl border border-gray-200 hover:border-blue-300 transition-all duration-300 group"
                 >
                   <ShoppingCart className="w-6 h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
-                  
+
                   {/* Badge */}
                   {getTotalItems() > 0 && (
                     <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse shadow-lg">
                       {getTotalItems() > 99 ? '99+' : getTotalItems()}
                     </div>
                   )}
-                  
+
                   {/* Hover effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </button>
@@ -788,8 +789,8 @@ const removeItem = async (cartItemId: number) => {
             </div>
 
             {/* Mobile Menu Button */}
-            <button 
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" 
+            <button
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-6 h-6 text-gray-700" /> : <Menu className="w-6 h-6 text-gray-700" />}
@@ -838,7 +839,7 @@ const removeItem = async (cartItemId: number) => {
                       {userEmail && <p className="text-sm text-gray-500">{userEmail}</p>}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     {userMenuItems.slice(0, 3).map((item, index) => {
                       const IconComponent = item.icon;

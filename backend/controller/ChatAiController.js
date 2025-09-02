@@ -14,18 +14,17 @@ const chatWithAI = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     userId = decoded.userId || decoded.id;
   } catch (err) {
-    console.error("Lỗi decode JWT:", err); 
     return res.status(401).json({ message: "Token không hợp lệ" });
   }
 
-  if (!userId) return res.status(401).json({ message: "Token không có userId" });
+  if (!userId)
+    return res.status(401).json({ message: "Token không có userId" });
 
   const { message } = req.body;
-  if (!message?.trim()) return res.status(400).json({ error: "Message is required" });
+  if (!message?.trim())
+    return res.status(400).json({ error: "Message is required" });
 
   try {
-    console.log(`📩 User message: "${message}" from userId: ${userId}`);
-
     // 2️⃣ Lấy sản phẩm liên quan (keyword search) hoặc top 10
     let products = await prisma.product.findMany({
       where: { name: { contains: message } },
@@ -70,7 +69,7 @@ const chatWithAI = async (req, res) => {
     }
 
     // 3️⃣ Chuẩn hóa sản phẩm thành JSON
-    const productContext = products.map(p => ({
+    const productContext = products.map((p) => ({
       name: p.name,
       year: p.year || null,
       price: p.price || null,
@@ -80,10 +79,16 @@ const chatWithAI = async (req, res) => {
       seats: p.seats || null,
       km: p.km || null,
       quantity: p.quantity || null,
-      specifications: Object.fromEntries(p.specifications.map(s => [s.key, s.value])),
-      features: p.features.map(f => f.name),
-      safeties: p.safeties.map(s => s.name),
-      colors: p.colors.map(c => ({ name: c.name, hex: c.hex, gradient: c.gradient })),
+      specifications: Object.fromEntries(
+        p.specifications.map((s) => [s.key, s.value])
+      ),
+      features: p.features.map((f) => f.name),
+      safeties: p.safeties.map((s) => s.name),
+      colors: p.colors.map((c) => ({
+        name: c.name,
+        hex: c.hex,
+        gradient: c.gradient,
+      })),
     }));
 
     // 4 Xây dựng prompt với few-shot examples
@@ -177,12 +182,15 @@ ${JSON.stringify(productContext, null, 2)}
     const reply = completion.choices[0].message?.content || "Không có phản hồi";
 
     // 5️⃣ Lưu chat vào DB
-    await prisma.chatMessage.create({ data: { userId, role: "user", content: message } });
-    await prisma.chatMessage.create({ data: { userId, role: "assistant", content: reply } });
+    await prisma.chatMessage.create({
+      data: { userId, role: "user", content: message },
+    });
+    await prisma.chatMessage.create({
+      data: { userId, role: "assistant", content: reply },
+    });
 
     res.json({ reply });
   } catch (error) {
-    console.error("❌ ChatAI error:", error);
     res.status(500).json({ error: "AI error", details: error.message });
   }
 };

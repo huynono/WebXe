@@ -235,8 +235,8 @@ const Cart = () => {
         <div className="container mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-6">
-              <button 
-                onClick={() => navigate(-1)} 
+              <button
+                onClick={() => navigate(-1)}
                 className="group p-3 hover:bg-slate-100/60 rounded-xl transition-all duration-200 hover:shadow-lg"
               >
                 <ArrowLeft className="w-6 h-6 text-slate-700 group-hover:text-slate-900 transition-colors" />
@@ -283,13 +283,12 @@ const Cart = () => {
                 const key = getCartItemKey(item);
                 const isSelected = selectedItems.has(key);
                 return (
-                  <div 
-                    key={key} 
-                    className={`group bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${
-                      isSelected 
-                        ? 'border-slate-300 ring-2 ring-slate-200/50 shadow-slate-300/50' 
+                  <div
+                    key={key}
+                    className={`group bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${isSelected
+                        ? 'border-slate-300 ring-2 ring-slate-200/50 shadow-slate-300/50'
                         : 'border-slate-200/60 hover:border-slate-300'
-                    }`}
+                      }`}
                   >
                     <div className="p-8">
                       <div className="flex flex-col lg:flex-row gap-8">
@@ -310,13 +309,13 @@ const Cart = () => {
                               )}
                             </div>
                           </label>
-                          
+
                           <div className="relative group/image">
                             <div className="w-56 h-40 lg:w-72 lg:h-52 rounded-2xl overflow-hidden shadow-lg">
-                              <img 
-                                src={item.image} 
-                                alt={item.name} 
-                                className="w-full h-full object-cover group-hover/image:scale-105 transition-transform duration-500" 
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="w-full h-full object-cover group-hover/image:scale-105 transition-transform duration-500"
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300"></div>
                             </div>
@@ -333,7 +332,7 @@ const Cart = () => {
                               <h3 className="text-2xl font-bold text-slate-900 leading-tight group-hover:text-slate-700 transition-colors">
                                 {item.name}
                               </h3>
-                              
+
                               <div className="flex flex-wrap gap-3">
                                 <span className="px-4 py-2 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 rounded-full text-sm font-semibold shadow-inner">
                                   {item.category}
@@ -347,7 +346,7 @@ const Cart = () => {
                                   {item.color}
                                 </span>
                               </div>
-                              
+
                               <div className="grid grid-cols-2 gap-4 text-sm text-slate-600">
                                 {item.km !== undefined && (
                                   <div className="flex items-center space-x-2">
@@ -369,9 +368,9 @@ const Cart = () => {
                                 )}
                               </div>
                             </div>
-                            
-                            <button 
-                              onClick={() => removeItem(item.cartItemId)} 
+
+                            <button
+                              onClick={() => removeItem(item.cartItemId)}
                               className="group/trash p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200"
                             >
                               <Trash2 className="w-6 h-6 group-hover/trash:scale-110 transition-transform" />
@@ -386,10 +385,10 @@ const Cart = () => {
                                 {formatPrice(item.price)}
                               </p>
                             </div>
-                            
+
                             <div className="flex items-center space-x-1 bg-slate-50 rounded-2xl p-1 shadow-inner">
-                              <button 
-                                onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)} 
+                              <button
+                                onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
                                 className="w-12 h-12 rounded-xl bg-white hover:bg-slate-100 flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md group/btn"
                               >
                                 <Minus className="w-5 h-5 text-slate-600 group-hover/btn:text-slate-800 transition-colors" />
@@ -397,8 +396,8 @@ const Cart = () => {
                               <span className="text-xl font-bold text-slate-900 min-w-[3rem] text-center px-4">
                                 {item.quantity}
                               </span>
-                              <button 
-                                onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)} 
+                              <button
+                                onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
                                 className="w-12 h-12 rounded-xl bg-slate-800 hover:bg-slate-900 flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-xl group/btn"
                               >
                                 <Plus className="w-5 h-5 text-white group-hover/btn:scale-110 transition-transform" />
@@ -433,17 +432,17 @@ const Cart = () => {
                         <span className="text-slate-700 font-medium">Tạm tính</span>
                         <span className="text-lg font-bold text-slate-800">{formatPrice(getSelectedTotalPrice())}</span>
                       </div>
-                      
+
                       {/* <div className="flex justify-between items-center py-2"> */}
-                        {/* <span className="text-slate-700 font-medium">Phí vận chuyển</span> */}
-                        {/* <span className="text-emerald-600 font-bold">Miễn phí</span> */}
+                      {/* <span className="text-slate-700 font-medium">Phí vận chuyển</span> */}
+                      {/* <span className="text-emerald-600 font-bold">Miễn phí</span> */}
                       {/* </div> */}
-                      
+
                       <div className="flex justify-between items-center py-2">
                         <span className="text-slate-700 font-medium">Thuế VAT (10%)</span>
                         <span className="text-lg font-bold text-slate-800">{formatPrice(getSelectedTotalPrice() * 0.1)}</span>
                       </div>
-                      
+
                       <div className="border-t border-slate-200 pt-6">
                         <div className="flex justify-between items-center">
                           <span className="text-xl font-bold text-slate-900">Tổng cộng</span>
@@ -456,26 +455,26 @@ const Cart = () => {
                     </div>
 
                     <div className="space-y-4">
-                    <button
-                          onClick={() => {
-                            const selectedCartItems = cartItems.filter(item =>
-                              selectedItems.has(getCartItemKey(item))
-                            );
-                            navigate('/checkout', { state: { selectedCartItems } });
-                          }}
-                          disabled={getSelectedTotalItems() === 0}
-                          className="w-full bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black 
+                      <button
+                        onClick={() => {
+                          const selectedCartItems = cartItems.filter(item =>
+                            selectedItems.has(getCartItemKey(item))
+                          );
+                          navigate('/checkout', { state: { selectedCartItems } });
+                        }}
+                        disabled={getSelectedTotalItems() === 0}
+                        className="w-full bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black 
                             disabled:from-slate-300 disabled:to-slate-400 text-white py-5 rounded-2xl font-bold text-lg 
                             transition-all duration-200 shadow-xl hover:shadow-2xl hover:-translate-y-1 
                             disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none group"
-                        >
-                          <span className="flex items-center justify-center space-x-3">
-                            <Package className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                            <span>Thanh toán ngay</span>
-                          </span>
-                        </button>
+                      >
+                        <span className="flex items-center justify-center space-x-3">
+                          <Package className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                          <span>Thanh toán ngay</span>
+                        </span>
+                      </button>
 
-                      
+
                       <button
                         onClick={() => navigate('/cars')}
                         className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-4 rounded-2xl font-semibold transition-all duration-200 hover:shadow-lg"

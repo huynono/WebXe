@@ -6,7 +6,7 @@ import {
   createRoom,
   sendMessage,
   markMessagesAsRead,
-  getUserMessages
+  getUserMessages,
 } from "../controller/ChatAdminController.js";
 import jwt from "jsonwebtoken";
 
@@ -29,12 +29,9 @@ export default router;
 
 export const initChatSocket = (io) => {
   io.on("connection", async (socket) => {
-    console.log("🔥 New socket connection:", socket.id);
-
     try {
       const token = socket.handshake.auth?.token;
       if (!token) {
-        console.log("❌ Token không được gửi");
         socket.disconnect();
         return;
       }
@@ -43,7 +40,6 @@ export const initChatSocket = (io) => {
       const isAdmin = decoded.email === process.env.ADMIN_EMAIL;
 
       socket.user = { ...decoded, role: isAdmin ? "admin" : "user" };
-      console.log(`✅ User verified:`, socket.user);
 
       // =========================
       // User tự tạo/join room
@@ -57,12 +53,10 @@ export const initChatSocket = (io) => {
           room = await prisma.adminChatRoom.create({
             data: { userId: socket.user.id },
           });
-          console.log("🆕 Room created for user:", room);
         }
 
         socket.join(`chat_${room.id}`);
         socket.data.roomId = room.id;
-        console.log(`➡️ User ${socket.user.id} joined room chat_${room.id}`);
       }
 
       // =========================
@@ -78,7 +72,6 @@ export const initChatSocket = (io) => {
         try {
           const targetRoomId = roomId || socket.data.roomId;
           if (!targetRoomId) {
-            console.log("❌ No target room, ignoring message");
             return;
           }
 
@@ -86,7 +79,6 @@ export const initChatSocket = (io) => {
             where: { id: targetRoomId },
           });
           if (!room) {
-            console.log("❌ Room not found");
             return;
           }
 
@@ -135,11 +127,7 @@ export const initChatSocket = (io) => {
               }
             });
           }
-
-          console.log("📣 Message emitted:", messageData);
-        } catch (err) {
-          console.error("❌ Error when sending message:", err);
-        }
+        } catch (err) {}
       });
 
       // =========================

@@ -1,6 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
-const cloudinary = require('cloudinary').v2;
-const cron = require('node-cron');
+const { PrismaClient } = require("@prisma/client");
+const cloudinary = require("cloudinary").v2;
+const cron = require("node-cron");
 const prisma = new PrismaClient();
 
 // Config Cloudinary
@@ -15,7 +15,6 @@ cloudinary.config({
 // ⏰ 0h00 hàng ngày: vô hiệu hóa voucher hết hạn
 cron.schedule("0 0 * * *", async () => {
   const now = new Date();
-  console.log("⏰ Cronjob chạy: kiểm tra voucher hết hạn...");
 
   try {
     const result = await prisma.voucher.updateMany({
@@ -27,24 +26,17 @@ cron.schedule("0 0 * * *", async () => {
     });
 
     if (result.count > 0) {
-      console.log(`✅ ${result.count} voucher đã được vô hiệu hóa.`);
     }
-  } catch (error) {
-    console.error("❌ Lỗi khi chạy cron job:", error);
-  }
+  } catch (error) {}
 });
 
 // ⏰ Ngày 1 hàng tháng: reset usageLimit (ví dụ đặt lại 100)
 cron.schedule("0 0 1 * *", async () => {
-  console.log("⏰ Cronjob chạy: reset usageLimit...");
   try {
     await prisma.voucher.updateMany({
       data: { usageLimit: 100 },
     });
-    console.log("✅ Reset usageLimit thành công");
-  } catch (error) {
-    console.error("❌ Lỗi reset usageLimit:", error);
-  }
+  } catch (error) {}
 });
 
 // ================== CRUD VOUCHER ==================
@@ -98,7 +90,6 @@ exports.createVoucher = async (req, res) => {
       voucher: newVoucher,
     });
   } catch (error) {
-    console.error("❌ Error in createVoucher:", error);
     if (error.code === "P2002") {
       return res.status(400).json({
         message: `❌ Mã code "${req.body?.code}" đã tồn tại!`,
@@ -112,16 +103,15 @@ exports.createVoucher = async (req, res) => {
 exports.getAllVouchers = async (req, res) => {
   try {
     const vouchers = await prisma.voucher.findMany({
-      orderBy: { id: 'asc' },
+      orderBy: { id: "asc" },
     });
 
     res.status(200).json({
-      message: '✅ Lấy danh sách voucher thành công',
+      message: "✅ Lấy danh sách voucher thành công",
       total: vouchers.length,
       vouchers,
     });
   } catch (error) {
-    console.error("❌ Error in getAllVouchers:", error);
     res.status(500).json({ message: "❌ Lỗi server", error: error.message });
   }
 };
@@ -180,7 +170,6 @@ exports.updateVoucher = async (req, res) => {
     if (error.code === "P2002") {
       return res.status(400).json({ message: `❌ Mã code đã tồn tại!` });
     }
-    console.error("❌ Error in updateVoucher:", error);
     res.status(500).json({ message: "❌ Lỗi server", error: error.message });
   }
 };
@@ -194,7 +183,6 @@ exports.deleteVoucher = async (req, res) => {
     });
     res.status(200).json({ message: "✅ Xóa voucher thành công" });
   } catch (error) {
-    console.error("❌ Error in deleteVoucher:", error);
     res.status(500).json({ message: "❌ Lỗi server", error: error.message });
   }
 };
@@ -211,7 +199,7 @@ exports.updateVoucherStatus = async (req, res) => {
 
     const updatedVoucher = await prisma.voucher.update({
       where: { id: Number(id) },
-      data: { isActive: isActive === 'true' || isActive === true },
+      data: { isActive: isActive === "true" || isActive === true },
     });
 
     res.status(200).json({
@@ -219,7 +207,6 @@ exports.updateVoucherStatus = async (req, res) => {
       voucher: updatedVoucher,
     });
   } catch (error) {
-    console.error("❌ Error in updateVoucherStatus:", error);
     res.status(500).json({ message: "❌ Lỗi server", error: error.message });
   }
 };
@@ -230,7 +217,9 @@ exports.applyVoucher = async (req, res) => {
     const { code, orderTotal } = req.body;
 
     if (!code || !orderTotal) {
-      return res.status(400).json({ message: "❌ Thiếu mã voucher hoặc tổng đơn hàng" });
+      return res
+        .status(400)
+        .json({ message: "❌ Thiếu mã voucher hoặc tổng đơn hàng" });
     }
 
     const voucher = await prisma.voucher.findUnique({
@@ -248,11 +237,15 @@ exports.applyVoucher = async (req, res) => {
     }
 
     if (voucher.startDate > now || voucher.endDate < now) {
-      return res.status(400).json({ message: "❌ Voucher đã hết hạn hoặc chưa bắt đầu" });
+      return res
+        .status(400)
+        .json({ message: "❌ Voucher đã hết hạn hoặc chưa bắt đầu" });
     }
 
     if (voucher.usageLimit !== null && voucher.usageLimit <= 0) {
-      return res.status(400).json({ message: "❌ Voucher đã hết lượt sử dụng" });
+      return res
+        .status(400)
+        .json({ message: "❌ Voucher đã hết lượt sử dụng" });
     }
 
     if (voucher.minOrderValue && orderTotal < voucher.minOrderValue) {
@@ -288,7 +281,10 @@ exports.applyVoucher = async (req, res) => {
     const vatAmount = orderTotal * vatRate;
 
     let finalShipping = 500000;
-    if (discountType === "FREESHIP" && orderTotal >= (voucher.minOrderValue || 0)) {
+    if (
+      discountType === "FREESHIP" &&
+      orderTotal >= (voucher.minOrderValue || 0)
+    ) {
       finalShipping = 0;
     }
 
@@ -310,9 +306,7 @@ exports.applyVoucher = async (req, res) => {
         remainingUsage: voucher.usageLimit,
       },
     });
-
   } catch (error) {
-    console.error("❌ Error in applyVoucher:", error);
     res.status(500).json({ message: "❌ Lỗi server", error: error.message });
   }
 };

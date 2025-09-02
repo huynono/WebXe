@@ -193,57 +193,57 @@ const MyOrders = () => {
         });
 
     const getStatusConfig = (status: OrderStatus) => ({
-        pending: { 
-            color: "text-amber-700 bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200", 
-            icon: Clock, 
+        pending: {
+            color: "text-amber-700 bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200",
+            icon: Clock,
             text: "Chờ xử lý",
             bgColor: "bg-amber-50"
         },
-        confirmed: { 
-            color: "text-blue-700 bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200", 
-            icon: CheckCircle2, 
+        confirmed: {
+            color: "text-blue-700 bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200",
+            icon: CheckCircle2,
             text: "Đã xác nhận",
             bgColor: "bg-blue-50"
         },
-        processing: { 
-            color: "text-purple-700 bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200", 
-            icon: Package, 
+        processing: {
+            color: "text-purple-700 bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200",
+            icon: Package,
             text: "Đang chuẩn bị",
             bgColor: "bg-purple-50"
         },
-        shipping: { 
-            color: "text-indigo-700 bg-gradient-to-r from-indigo-50 to-indigo-100 border-indigo-200", 
-            icon: Truck, 
+        shipping: {
+            color: "text-indigo-700 bg-gradient-to-r from-indigo-50 to-indigo-100 border-indigo-200",
+            icon: Truck,
             text: "Đang giao",
             bgColor: "bg-indigo-50"
         },
-        delivered: { 
-            color: "text-emerald-700 bg-gradient-to-r from-emerald-50 to-emerald-100 border-emerald-200", 
-            icon: CheckCircle2, 
+        delivered: {
+            color: "text-emerald-700 bg-gradient-to-r from-emerald-50 to-emerald-100 border-emerald-200",
+            icon: CheckCircle2,
             text: "Đã giao",
             bgColor: "bg-emerald-50"
         },
-        cancelled: { 
-            color: "text-red-700 bg-gradient-to-r from-red-50 to-red-100 border-red-200", 
-            icon: X, 
+        cancelled: {
+            color: "text-red-700 bg-gradient-to-r from-red-50 to-red-100 border-red-200",
+            icon: X,
             text: "Đã hủy",
             bgColor: "bg-red-50"
         }
     })[status];
 
     const getPaymentStatusConfig = (status: PaymentStatus) => ({
-        paid: { 
-            color: "text-emerald-700 bg-gradient-to-r from-emerald-50 to-emerald-100 border-emerald-200", 
+        paid: {
+            color: "text-emerald-700 bg-gradient-to-r from-emerald-50 to-emerald-100 border-emerald-200",
             text: "Đã thanh toán",
             icon: CheckCircle2
         },
-        unpaid: { 
-            color: "text-amber-700 bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200", 
+        unpaid: {
+            color: "text-amber-700 bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200",
             text: "Chưa thanh toán",
             icon: Clock
         },
-        refunded: { 
-            color: "text-red-700 bg-gradient-to-r from-red-50 to-red-100 border-red-200", 
+        refunded: {
+            color: "text-red-700 bg-gradient-to-r from-red-50 to-red-100 border-red-200",
             text: "Đã hoàn tiền",
             icon: X
         }
@@ -301,7 +301,7 @@ const MyOrders = () => {
                                 <Shield className="w-4 h-4 text-green-600" />
                                 <span className="text-sm font-medium text-slate-700">Mua sắm an toàn</span>
                             </div>
-                            
+
                             <button
                                 onClick={() => window.location.reload()}
                                 className="flex items-center space-x-2 px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl transition-all duration-200"
@@ -328,7 +328,7 @@ const MyOrders = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200/60">
                         <div className="flex items-center space-x-3">
                             <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center">
@@ -342,7 +342,7 @@ const MyOrders = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200/60">
                         <div className="flex items-center space-x-3">
                             <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center">
@@ -356,7 +356,7 @@ const MyOrders = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200/60">
                         <div className="flex items-center space-x-3">
                             <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center">
@@ -418,11 +418,10 @@ const MyOrders = () => {
                                     <button
                                         key={filter.value}
                                         onClick={() => setSelectedStatus(filter.value)}
-                                        className={`p-4 rounded-2xl font-semibold transition-all duration-200 border-2 text-center ${
-                                            selectedStatus === filter.value
+                                        className={`p-4 rounded-2xl font-semibold transition-all duration-200 border-2 text-center ${selectedStatus === filter.value
                                                 ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg scale-105'
                                                 : `${filter.color} border-transparent hover:scale-105 hover:shadow-md`
-                                        }`}
+                                            }`}
                                     >
                                         <div className="text-lg font-bold">{filter.count}</div>
                                         <div className="text-sm">{filter.label}</div>
@@ -457,7 +456,7 @@ const MyOrders = () => {
                                                     <span className="text-slate-700 font-medium">{formatDate(order.createdAt)}</span>
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="flex items-center space-x-4">
                                                 <div className={`px-4 py-3 rounded-2xl text-sm font-bold border-2 flex items-center space-x-2 ${paymentConfig.color} shadow-sm`}>
                                                     <PaymentIcon className="w-4 h-4" />
@@ -491,12 +490,12 @@ const MyOrders = () => {
                                                             </div>
                                                         </div>
                                                     )}
-                                                    
+
                                                     <div className="flex-1">
                                                         <h3 className="font-bold text-slate-900 text-xl leading-tight mb-3">
                                                             {order.firstItemName}
                                                         </h3>
-                                                        
+
                                                         <div className="flex flex-wrap items-center gap-4 mb-4">
                                                             <div className="flex items-center space-x-2 bg-slate-50 px-3 py-2 rounded-xl">
                                                                 <Package className="w-4 h-4 text-slate-600" />
@@ -504,7 +503,7 @@ const MyOrders = () => {
                                                                     {order.itemCount} sản phẩm
                                                                 </span>
                                                             </div>
-                                                            
+
                                                             <div className="flex items-center space-x-2 bg-slate-50 px-3 py-2 rounded-xl">
                                                                 <CreditCard className="w-4 h-4 text-slate-600" />
                                                                 <span className="text-slate-700 font-medium">
@@ -563,7 +562,7 @@ const MyOrders = () => {
                                                         <p className="text-3xl font-bold text-slate-900 mb-4">
                                                             {formatPrice(order.totalAmount)}
                                                         </p>
-                                                        
+
                                                         <button
                                                             onClick={() => handleViewOrder(order)}
                                                             className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105"
@@ -581,7 +580,7 @@ const MyOrders = () => {
                                                                 <span>Đánh giá</span>
                                                             </button>
                                                         )}
-                                                        
+
                                                         {order.status === "shipping" && (
                                                             <button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 py-3 rounded-xl font-semibold transition-colors flex items-center justify-center space-x-2 border border-blue-200">
                                                                 <Truck className="w-4 h-4" />
@@ -607,8 +606,8 @@ const MyOrders = () => {
                                 {searchTerm || selectedStatus !== "all" ? "Không tìm thấy đơn hàng" : "Chưa có đơn hàng nào"}
                             </h3>
                             <p className="text-slate-600 mb-8 leading-relaxed">
-                                {searchTerm || selectedStatus !== "all" 
-                                    ? "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm để xem kết quả khác" 
+                                {searchTerm || selectedStatus !== "all"
+                                    ? "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm để xem kết quả khác"
                                     : "Hãy bắt đầu khám phá và mua sắm những sản phẩm yêu thích của bạn"}
                             </p>
                             <button

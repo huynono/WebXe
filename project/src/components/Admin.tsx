@@ -4035,9 +4035,9 @@ const Admin: React.FC = () => {
                 )}
               </div>
             </div>
-            
+
           )}
-         
+
 
           {/* Other Pages */}
           {activeTab === 'settings' && renderPlaceholderContent('Cài đặt hệ thống', 'Tính năng cài đặt hệ thống đang được phát triển')}
@@ -4045,9 +4045,9 @@ const Admin: React.FC = () => {
           {activeTab === 'notifications' && renderPlaceholderContent('Thông báo', 'Tính năng quản lý thông báo đang được phát triển')}
           {activeTab === 'help' && renderPlaceholderContent('Trợ giúp', 'Tài liệu hướng dẫn sử dụng hệ thống')}
         </div>
-        
+
       </div>
-      
+
 
       {/* Chat Widget for Demo */}
 
@@ -4101,9 +4101,9 @@ const Admin: React.FC = () => {
         order={selectedOrder}
         onOrderUpdated={handleOrderUpdated}
       />
-       <AdminChatWidget />
+      <AdminChatWidget />
     </div>
-    
+
   );
 };
 

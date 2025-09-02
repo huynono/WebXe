@@ -30,9 +30,9 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
   };
 
   return (
-    <div 
-     onClick={() => navigate(`/product/${car.slug || car.id}`)}
-    className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+    <div
+      onClick={() => navigate(`/product/${car.slug || car.id}`)}
+      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
       <div className="relative h-48 bg-gray-200 overflow-hidden">
         {car.image && car.image.startsWith('http') ? (
           <img
